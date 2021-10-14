@@ -1,0 +1,114 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 200
+      min-spare: 30
+  port: 8080
+  servlet:
+    context-path: /
+
+## 日志
+logging:
+  config: classpath:logback-prod.xml
+  level:
+    cn.jay.repository: trace
+
+# DataSource
+spring:
+  datasource:
+    #name: druidDataSource
+    #type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      smsdb:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://test.youyi.io:3306/smsdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+        username: smsdba
+        password: "%hKl9KO2n7CCe0d^7M]4c&!"
+        filters: stat,wall,slf4j,config
+        max-active: 100
+        initial-size: 1
+        max-wait: 60000
+        min-idle: 1
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: select 'x'
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        pool-prepared-statements: true
+        max-open-prepared-statements: 50
+        max-pool-prepared-statement-per-connection-size: 20
+
+  #配置freemarker
+  freemarker:
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    # 设置模板后缀名
+    suffix: .ftl
+    # 设置文档类型
+    content-type: text/html
+    # 设置页面编码格式
+    charset: UTF-8
+    # 设置页面缓存
+    cache: false
+    prefer-file-system-access: false
+    # 设置ftl文件路径
+    template-loader-path:
+      classpath: /templates
+    # 设置静态文件路径，js,css等
+
+  #json 时间戳统一转换
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  #redis 配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0
+
+#mybatis plus 设置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型
+      id-type: AUTO
+      # 默认数据库表下划线命名
+      table-underline: true
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回类型为Map,显示null对应的字段
+    call-setters-on-nulls: true
+
+##########################自动义的配置#####################
+smart-system:
+  mail:
+    smtp: smtp.126.com
+    from_address: xxx@126.com
+    from_name: xxx@126.com
+    password: xxxxxx
+  mysalt: xxxxx
+
+smart-school:
+  app_base_url: http://smartschool-test.xiaoqu.net.cn
+  remote_user_id: app.mobile.ligong
+  #app中用户头像等文件上传的目录（对应到web项目的upload目录,不用加upload）
+  file.root.path: /data/web/smartschool.xiaoqu.net.cn

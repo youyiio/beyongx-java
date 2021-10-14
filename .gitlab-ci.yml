@@ -1,0 +1,75 @@
+# 定义一些变量, 下面各阶段会使用
+variables:
+  #server_ip: 192.168.1.52
+  #ssh_port: 22
+  jar_name: beyongx-1.0.0.jar
+  upload_path: /data/application/beyongx-java
+
+# 定义执行的各个阶段及顺序
+stages:
+  - build
+  - test
+  - deploy-for-ci # deploy for tester
+  - deploy-for-cd # deploy for product
+
+# 编译打包，job测试编译是否出现问题
+build_job:
+  stage: build
+  script:
+    - mvn clean package -Dmaven.test.skip=true
+  only:
+    - master
+#  cache:
+#    key: m2-repo
+#    paths:
+#      - ~/.m2/repository
+#  artifacts:
+#    paths:
+#      - target/$jar_name
+
+# 测试阶段，如junit,jmeter等
+test_job:
+  stage: test
+  only:
+    - master
+  script:
+    - ls -l
+
+# 开发持续集成，部署测试环境，需重新编译打包
+deploy_for_ci_job:
+  stage: deploy-for-ci
+  only:
+    - master
+  script:
+    - pwd
+    - ls -l
+    - mvn clean package -Dmaven.test.skip=true
+    - ls -l target/
+    - echo ${ci_server_ip}
+    - echo $ci_ssh_port
+    - ssh root@$ci_server_ip -p $ci_ssh_port "rm -fr $upload_path/$jar_name"
+    - scp -P $ci_ssh_port target/$jar_name root@$ci_server_ip:$upload_path/
+    - scp -P $ci_ssh_port start.sh root@$ci_server_ip:$upload_path/
+    - ssh root@$ci_server_ip -p $ci_ssh_port "ls -l $upload_path"
+    - ssh root@$ci_server_ip -p $ci_ssh_port "cd $upload_path&& chmod +x start.sh && ./start.sh"
+
+# 持续交付，部署生产环境，需重新编译打包
+deploy_for_cd_job:
+  stage: deploy-for-cd
+  only:
+    - release
+  script:
+    - pwd
+    - ls -l
+    - mvn clean package -DskipTest
+    - ls -l target/
+    - ssh root@$cd_server_ip -p $cd_ssh_port "rm -fr $upload_path/$jar_name"
+    - scp -P $cd_ssh_port target/$jar_name root@$cd_server_ip:$upload_path/
+    - scp -P $cd_ssh_port start.sh root@$cd_server_ip:$upload_path/
+    - ssh root@$cd_server_ip -p $cd_ssh_port "ls -l $upload_path"
+    - ssh root@$cd_server_ip -p $cd_ssh_port "cd $upload_path && chmod +x start.sh && ./start.sh"
+  artifacts:
+    when: on_success # job成功时上传artifacts
+    expire_in: 1 week # 一周后过期
+    paths:
+      - target/$jar_name
