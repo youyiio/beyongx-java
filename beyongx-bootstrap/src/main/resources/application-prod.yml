@@ -13,7 +13,9 @@ server:
 logging:
   config: classpath:logback-prod.xml
   level:
-    cn.jay.repository: trace
+    com:
+      beyongx:
+        bootstrap: trace
 
 # DataSource
 spring:
@@ -56,8 +58,7 @@ spring:
     cache: false
     prefer-file-system-access: false
     # 设置ftl文件路径
-    template-loader-path:
-      classpath: /templates
+    template-loader-path: classpath:/templates
     # 设置静态文件路径，js,css等
 
   #json 时间戳统一转换
@@ -97,18 +98,3 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # 返回类型为Map,显示null对应的字段
     call-setters-on-nulls: true
-
-##########################自动义的配置#####################
-smart-system:
-  mail:
-    smtp: smtp.126.com
-    from_address: xxx@126.com
-    from_name: xxx@126.com
-    password: xxxxxx
-  mysalt: xxxxx
-
-smart-school:
-  app_base_url: http://smartschool-test.xiaoqu.net.cn
-  remote_user_id: app.mobile.ligong
-  #app中用户头像等文件上传的目录（对应到web项目的upload目录,不用加upload）
-  file.root.path: /data/web/smartschool.xiaoqu.net.cn

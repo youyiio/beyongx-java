@@ -13,7 +13,9 @@ server:
 logging:
   config: classpath:logback.xml
   level:
-    cn.jay.repository: trace
+    com:
+      beyongx:
+        bootstrap: trace
 
 # DataSource
 spring:
@@ -56,8 +58,7 @@ spring:
     cache: false
     prefer-file-system-access: false
     # 设置ftl文件路径
-    template-loader-path:
-      classpath: /templates
+    template-loader-path: classpath:/templates
     # 设置静态文件路径，js,css等
 
   #json 时间戳统一转换

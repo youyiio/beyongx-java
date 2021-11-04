@@ -9,7 +9,7 @@ Beyongx 基于Springboot 2.5、mybatis-plus、Jwt、apache shiro的后台前后�
 
 * 关系型数据存储：mysql；
 * 缓存中间件：redis；
-* 前后端分离：vue 2.x + elementUI；
+* 前后端分离：vue 2.x + element-ui；
 
 ## 项目机构
 - `beyongx-common` 为系统的公共模块，各种工具类，通用依赖

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-deploy_path=/data/application/beyongx-java
+deploy_path=$1
 
 if [ ! -d $deploy_path ]; then
   mkdir $deploy_path
