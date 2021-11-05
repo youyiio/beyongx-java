@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -64,11 +64,16 @@ public class SysUser implements Serializable {
      */
     private String headUrl;
 
+    private Integer deptId;
+
     private String qq;
 
     private String weixin;
 
-    private Integer referee;
+    /**
+     * 介绍人
+     */
+    private String referee;
 
     private Date registerTime;
 

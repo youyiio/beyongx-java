@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -25,19 +25,19 @@ public class SysDept implements Serializable {
     private Integer id;
 
     /**
-     * 名称
-     */
-    private String name;
-
-    /**
      * 上级部门
      */
     private Integer pid;
 
     /**
-     * 是否启用
+     * 名称
      */
-    private String enable;
+    private String name;
+
+    /**
+     * 启用状态
+     */
+    private Integer status;
 
     /**
      * 排序

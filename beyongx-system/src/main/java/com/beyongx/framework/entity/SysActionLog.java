@@ -9,11 +9,11 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 操作日志表
+ * 日志表
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -35,10 +35,13 @@ public class SysActionLog implements Serializable {
     private String username;
 
     /**
-     * 操作模块
+     * 模块
      */
     private String module;
 
+    /**
+     * 组件
+     */
     private String component;
 
     private String ip;
@@ -46,6 +49,11 @@ public class SysActionLog implements Serializable {
     private Long actionTime;
 
     private String params;
+
+    /**
+     * 用户代理
+     */
+    private String userAgent;
 
     private String response;
 

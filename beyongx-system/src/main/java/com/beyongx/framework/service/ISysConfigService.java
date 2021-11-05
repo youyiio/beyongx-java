@@ -1,6 +1,6 @@
 package com.beyongx.framework.service;
 
-import com.beyongx.framework.entity.SysDict;
+import com.beyongx.framework.entity.SysConfig;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
-public interface ISysDictService extends IService<SysDict> {
+public interface ISysConfigService extends IService<SysConfig> {
 
 }

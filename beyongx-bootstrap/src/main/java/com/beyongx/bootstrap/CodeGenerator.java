@@ -20,10 +20,10 @@ import java.util.Scanner;
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
 
-    public static final String DATABASE_URL = "jdbc:mysql://test.youyi.io:3306/smsdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
+    public static final String DATABASE_URL = "jdbc:mysql://test.youyi.io:3306/beyongxdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
     //public static final String DATABASE_DBNAME = "";
-    public static final String DATABASE_USERNAME = "smsdba";
-    public static final String DATABASE_PASSWORD = "%hKl9KO2n7CCe0d^7M]4c&!";
+    public static final String DATABASE_USERNAME = "beyongxdba";
+    public static final String DATABASE_PASSWORD = "F05k[29_D$I#^1Zmnq6rAPu>";
 
     public static final String MODULE_ROOT_PACKAGE_NAME = "com.beyongx"; //模块根包名，小写
     public static final String MODULE_NAME = "framework"; //模块子包名，小写

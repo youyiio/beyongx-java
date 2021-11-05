@@ -13,11 +13,11 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysDict implements Serializable {
+public class SysConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,22 +32,27 @@ public class SysDict implements Serializable {
     /**
      * 字典组
      */
-    private String dictGroup;
+    private String group;
 
     /**
-     * 对照码
+     * 字典键
      */
-    private String dictKey;
+    private String key;
 
     /**
-     * 对照值
+     * 字典值
      */
-    private String dictValue;
+    private String value;
 
     /**
-     * 是否启用
+     * 值类型
      */
-    private String enable;
+    private String valueType;
+
+    /**
+     * 启用状态
+     */
+    private Integer status;
 
     /**
      * 排序

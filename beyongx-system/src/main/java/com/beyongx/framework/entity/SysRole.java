@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,13 +24,19 @@ public class SysRole implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 名称
+     */
     private String name;
 
     /**
-     * 1.激活;2.冻结;3.删除
+     * 状态:1.激活;2.冻结;3.删除
      */
     private Boolean status;
 
+    /**
+     * 备注
+     */
     private String remark;
 
     /**

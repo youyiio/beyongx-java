@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author youyi.io
- * @since 2021-07-01
+ * @since 2021-11-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,9 +26,9 @@ public class CmsCategory implements Serializable {
 
     private String pid;
 
-    private String name;
-
     private String title;
+
+    private String name;
 
     private String remark;
 

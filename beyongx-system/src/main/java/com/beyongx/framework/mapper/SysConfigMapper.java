@@ -1,6 +1,6 @@
 package com.beyongx.framework.mapper;
 
-import com.beyongx.framework.entity.SysDict;
+import com.beyongx.framework.entity.SysConfig;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author youyi.io
  * @since 2021-07-01
  */
-public interface SysDictMapper extends BaseMapper<SysDict> {
+public interface SysConfigMapper extends BaseMapper<SysConfig> {
 
 }
