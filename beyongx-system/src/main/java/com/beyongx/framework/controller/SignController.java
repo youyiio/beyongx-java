@@ -1,6 +1,7 @@
 package com.beyongx.framework.controller;
 
 import com.beyongx.common.utils.DateTimeUtils;
+import com.beyongx.common.utils.ValidateUtils;
 import com.beyongx.common.validation.group.Always;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.entity.SysUser;
@@ -10,6 +11,7 @@ import com.beyongx.framework.shiro.JwtUtils;
 import com.beyongx.framework.service.ISysUserService;
 import com.beyongx.framework.vo.SignUser;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/sign")
+@RequestMapping(value = "/api/sign")
 @Slf4j
 public class SignController {
 
@@ -32,7 +34,15 @@ public class SignController {
         String username = signUser.getUsername();
         String plainPassword = signUser.getPassword(); //明文密码
 
-        SysUser user = userService.findByAccount(signUser.getUsername());
+        SysUser user = null;
+        if (ValidateUtils.isValidEmail(username)) {
+            user = userService.findByEmail(signUser.getUsername());
+        } else if (ValidateUtils.isValidMobile(username)) {
+            user = userService.findByMobile(signUser.getUsername());
+        } else {
+            user = userService.findByAccount(signUser.getUsername());
+        }
+        
         if (user == null) {
             return Result.error(Result.Code.E_PARAM_ERROR, "用户不存在!");
         }

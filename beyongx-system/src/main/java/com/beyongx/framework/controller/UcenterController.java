@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 用户类 前端控制器
+ * 用户中心接口类 前端控制器
  * </p>
  *
  * @author youyi.io
@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 @Slf4j
-public class UserController {
+public class UcenterController {
 
     //@RequiresPermissions("user:getInfo")
     @GetMapping("/getInfo")
