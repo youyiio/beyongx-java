@@ -2,7 +2,7 @@ package com.beyongx.framework.service.impl;
 
 import com.beyongx.framework.entity.SysConfig;
 import com.beyongx.framework.mapper.SysConfigMapper;
-import com.beyongx.framework.service.ISysDictService;
+import com.beyongx.framework.service.ISysConfigService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-07-01
  */
 @Service
-public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig> implements ISysDictService {
+public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig> implements ISysConfigService {
 
 }

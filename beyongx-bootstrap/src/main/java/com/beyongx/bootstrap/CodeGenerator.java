@@ -29,7 +29,8 @@ public class CodeGenerator {
     public static final String MODULE_NAME = "framework"; //模块子包名，小写
     public static final String MAVEN_MODULE_NAME = "beyongx-system"; //springboot模块名,小写
 
-
+    // 是否生成控制器开关
+    public static final boolean SWITCH_GENERATE_CONTROLLER = false;
 
     /**
      * <p>
@@ -151,7 +152,7 @@ public class CodeGenerator {
                 }
                 if (fileType == FileType.CONTROLLER) {
                     // 已经生成 mapper 文件判断存在，不想重新生成返回 false
-                    return !new File(filePath).exists();
+                    return SWITCH_GENERATE_CONTROLLER && !new File(filePath).exists();
                 }
                 // 允许生成模板文件
                 return true;

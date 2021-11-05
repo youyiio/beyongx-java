@@ -22,6 +22,14 @@ public class ShiroConfig {
     //@Value("${jwt.auth}")
     private boolean auth = true;
 
+    //jwt验证例外列表
+    private String[] jwtActionExcludes = {
+        "/api/sign/login", //登录
+        "/api/sign/register", //注册
+        "/api/sms/sendcode", //发送验证码
+        "/api/sms/login" //短信登录
+    };
+
     //配置拦截器
     @Bean
     public ShiroFilterFactoryBean shiroFilter(org.apache.shiro.mgt.SecurityManager securityManager) {
@@ -38,10 +46,10 @@ public class ShiroConfig {
 
         //设置拦截范围
         Map<String, String> filterMap = new LinkedHashMap<>();
-        //登录请求不拦截
-        filterMap.put("/sign/login", "anon");
-        //注册请求不拦截
-        filterMap.put("/sign/register", "anon");
+        //设置jwt不拦截的路径
+        for (String action : jwtActionExcludes) {
+            filterMap.put(action, "anon");
+        }
 
         //拦截所有接口请求，做权限判断
         //启用认证

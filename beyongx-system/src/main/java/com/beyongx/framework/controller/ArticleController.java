@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-07-01
  */
 @RestController
-@RequestMapping("/framework/cms-article")
+@RequestMapping("/api/article")
 public class ArticleController {
 
 }

@@ -20,7 +20,7 @@ import java.util.Map;
  * @since 2021-07-01
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/ucenter")
 @Slf4j
 public class UcenterController {
 

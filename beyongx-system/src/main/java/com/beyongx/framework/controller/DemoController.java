@@ -24,9 +24,10 @@ import java.util.Map;
  * @since 2021-07-01
  */
 @RestController
+@RequestMapping("/api/transaction")
 public class DemoController {
 
-    @GetMapping("/transaction/list")
+    @GetMapping("/list")
     public Result transactionList() {
         Page<Map<String, Object>> page = new Page<>(1, 10);
 
