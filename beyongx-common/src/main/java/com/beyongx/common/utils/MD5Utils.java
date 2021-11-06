@@ -32,7 +32,7 @@ public class MD5Utils {
      *            需要加密的字符串
      * @return String字符串 加密后的字符串
      */
-    public static String MD5(String pwd) {
+    public static String md5(String pwd) {
         try {
             // 创建加密对象
             MessageDigest digest = MessageDigest.getInstance("md5");

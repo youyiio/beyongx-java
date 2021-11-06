@@ -66,7 +66,7 @@ public class SignController {
         String token = JwtUtils.sign(jwtUser);
         Map<String, Object> data = new HashMap<>();
         data.put("uid", user.getId());
-        data.put("username", username);
+        data.put("nickname", username);
         data.put("token", token);
         data.put("expired", JwtUtils.EXPIRE_TIME); //过期秒数
 

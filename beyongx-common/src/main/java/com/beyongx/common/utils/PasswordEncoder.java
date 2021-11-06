@@ -35,7 +35,9 @@ public class PasswordEncoder {
 			throw new IllegalStateException("UTF-8 not supported!");
 		}
 
-		return new String(Hex.encode(digest));
+		String shaStr = new String(Hex.encode(digest));
+
+		return MD5Utils.md5(shaStr);
 	}
 
 	private static String mergePasswordAndSalt(String password, Object salt) {
@@ -43,10 +45,11 @@ public class PasswordEncoder {
 			password = "";
 		}
 
-		if ((salt == null) || "".equals(salt)) {
-			return password;
-		} else {
-			return password + "{" + salt.toString() + "}";
+		if (salt == null) {
+			salt = "";
 		}
+
+		return password.toLowerCase() + "{" + salt.toString() + "}";
+		
 	}
 }

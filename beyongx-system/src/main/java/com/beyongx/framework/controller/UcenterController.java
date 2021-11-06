@@ -2,10 +2,13 @@ package com.beyongx.framework.controller;
 
 
 import com.beyongx.common.vo.Result;
+import com.beyongx.framework.entity.SysUser;
+import com.beyongx.framework.service.ISysUserService;
 import com.beyongx.framework.shiro.JwtUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,17 +27,23 @@ import java.util.Map;
 @Slf4j
 public class UcenterController {
 
+    @Autowired
+    private ISysUserService userService;
+
     //@RequiresPermissions("user:getInfo")
     @GetMapping("/getInfo")
     public Result getInfo() {
         JwtUser jwtUser = (JwtUser) SecurityUtils.getSubject().getPrincipal();
 
+        SysUser user = userService.getById(jwtUser.getUid());
+
         Map<String, Object> data = new HashMap<>();
+        
+        data.put("nickname", user.getNickname());
+        data.put("headUrl", user.getHeadUrl());
+        data.put("description", "");
         //data.put("roles", user.getRoleList());
-        data.put("roles", new String[]{"admin", "tester"});
-        data.put("nickname", jwtUser.getUsername());
-        data.put("avatar", "https://www.ituizhan.com/static/cw/assets/images/index/f04.jpg");
-        data.put("introduction", "description");
+        data.put("roles", new String[]{"admin", "test"});
 
         return Result.success(data);
     }

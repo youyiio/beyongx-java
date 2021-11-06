@@ -81,10 +81,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public boolean verifyPassword(String plainPassword, SysUser user) {
-        Date registerTime = user.getRegisterTime();
 
         //密码加密SHA-256
-        String salt = DateTimeUtils.getFormatString(registerTime, "yyyy-MM-dd HH:mm:ss");
+        String salt = user.getSalt();
         String password = PasswordEncoder.encodePassword(plainPassword, salt);
 
         return StringUtils.equals(password, user.getPassword());

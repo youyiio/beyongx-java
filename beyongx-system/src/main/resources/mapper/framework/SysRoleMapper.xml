@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyongx.framework.mapper.SysRoleMapper">
 
+    <select id="selectByUid" resultType="com.beyongx.framework.entity.SysRole">
+        select r.* from sys_role as r, sys_user_role as ur where r.id = ur.role_id and ur.uid = #{uid}
+    </select>
+
 </mapper>
