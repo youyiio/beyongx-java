@@ -1,5 +1,6 @@
 package com.beyongx.common.aspect;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.beyongx.common.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,7 +86,7 @@ public class GlobalExceptionHandler {
 
         String msg = ((UnauthorizedException)e).getMessage();
 
-        return Result.error(Result.Code.E_VALIDATE_UNAUTHORIZED, "访问的资源未授权:" + msg);
+        return Result.error(Result.Code.E_ACCESS_NOT_AUTH, "访问的资源未授权:" + msg);
     }
 
     @ExceptionHandler(value = Exception.class)

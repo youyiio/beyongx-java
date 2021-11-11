@@ -1,6 +1,7 @@
 package com.beyongx.framework.shiro;
 
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.beyongx.common.utils.DateTimeUtils;
 import com.beyongx.framework.entity.SysMenu;
 import com.beyongx.framework.entity.SysRole;
@@ -58,7 +59,7 @@ public class ShiroRealm extends AuthorizingRealm {
      * @throws AuthenticationException
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException, TokenExpiredException {
         logger.info("1.执行认证逻辑");
 
         //获得token
@@ -71,7 +72,7 @@ public class ShiroRealm extends AuthorizingRealm {
         String username = JwtUtils.getUsername(token);
         //判空
         if (StringUtils.isBlank(username)) {
-            throw new AuthenticationException("认证已经过期！");
+            throw new AuthenticationException("E_TOKEN_EXPIRED");
         }
 
         JwtUser jwtUser = null;
@@ -79,21 +80,26 @@ public class ShiroRealm extends AuthorizingRealm {
             SysUser user = userService.findByAccount(username);
             //查询用户是否存在
             if (user == null) {
-                throw new AuthenticationException("token invalid!");
+                throw new AuthenticationException("E_TOKEN_INVALID");
             }
 
             jwtUser = new JwtUser();
             jwtUser.setUid(user.getId());
             jwtUser.setUsername(username);
-            jwtUser.setSalt(DateTimeUtils.getLongFormat(user.getRegisterTime()));
+            //jwtUser.setSalt(DateTimeUtils.getLongFormat(user.getRegisterTime()));
+            jwtUser.setSalt(user.getSalt());
             //token过期
             boolean isVerify = JwtUtils.verify(token, jwtUser);
             if (!isVerify) {
-                throw new AuthenticationException("token expired!");
+                throw new AuthenticationException("E_TOKEN_INVALID");
             }
 
             //拉取角色并填充JwtUser
             pullRolesAndPadding(jwtUser);
+        } catch (TokenExpiredException e) {
+            logger.warn("throw TokenExpiredException", e);
+
+            throw new AuthenticationException("E_TOKEN_EXPIRED");
         } catch (Exception e) {
             logger.warn("throw AuthenticationException", e);
 

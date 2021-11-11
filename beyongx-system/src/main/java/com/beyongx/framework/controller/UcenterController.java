@@ -30,7 +30,7 @@ public class UcenterController {
     @Autowired
     private ISysUserService userService;
 
-    //@RequiresPermissions("user:getInfo")
+    @RequiresPermissions("ucenter:getInfo")
     @GetMapping("/getInfo")
     public Result getInfo() {
         JwtUser jwtUser = (JwtUser) SecurityUtils.getSubject().getPrincipal();

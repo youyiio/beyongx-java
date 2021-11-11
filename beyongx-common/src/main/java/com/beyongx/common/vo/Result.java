@@ -40,33 +40,128 @@ public class Result {
         public static final int ACTION_SUCCESS             = 1;        //操作成功
         public static final int ACTION_FAILED              = 0;        //操作失败
 
-        public static final int E_UNKNOWN_ERROR            = 2;        //未知异常
-        public static final int E_PARAM_ERROR              = 3;        //参数错误
-        public static final int E_PARAM_NULL               = 4;        //参数为空
+        public static final int E_UNKNOWN_ERROR = 2;  //未知错误
+        public static final int E_PARAM_ERROR	= 3;  //参数错误
+        public static final int E_PARAM_EMPTY	= 4;  //参数为空
+        public static final int E_PARAM_VALIDATE_ERROR = 5;  //参数验证错误
+        public static final int E_TOKEN_EXPIRED	= 6;  //TOKEN不合法
+        public static final int E_TOKEN_EMPTY	= 7;  //TOKEN参数缺失
+        public static final int E_TOKEN_INVALID	= 8;  //TOKEN不合法
+        public static final int E_ACCESS_NOT_AUTH	= 9;  //访问资源未授权
+        public static final int E_ACCESS_NOT_FOUND = 10;  //访问资源未找到
+        public static final int E_ACCESS_TIMEOUT  = 11;  //访问资源超时
+        public static final int E_ACCESS_LIMIT = 12;  //访问受限
+        public static final int E_DATA_NOT_FOUND = 13;  //数据为找到
+        public static final int E_DATA_EXIST = 14;  //数据已存在
+        public static final int E_DATA_ERROR = 15;  //数据错误
+        public static final int E_DATA_VALIDATE_ERROR = 16;  //数据验证错误
+        public static final int E_THIRDPARTY_ERROR = 17;  //第三方系统错误
+        public static final int E_PARSE_JSON = 18;  //json解析错误
+        public static final int E_PARSE_DATE = 19;  //date日期解析错误
+        public static final int E_LOGIC_ERROR = 20;  //逻辑层操作错误
+        public static final int E_MODEL_ERROR = 21;  //模型层操作错误
+        public static final int E_DB_ERROR = 22;  //数据库操作错误
+        public static final int E_CODE_INCORRECT = 23;  //验证码不正确
+        public static final int E_CODE_EXPIRED = 24;  //验证码已过期
+        public static final int E_CODE_USED = 25;  //验证码已使用
+        public static final int E_RISK_ASSE_CODE_CHECK = 26;  //[风险评估]需要验证码检测
+        public static final int E_RISK_ASSE_HUMAN_CHECK = 27;  //[风险评估]需要人类检测
 
-        public static final int E_REQUEST_METHOD_UNSUPPORT  = 30001;   //请求方法不支持，请注意get,post,put,delete
-        public static final int E_DATA_ACCESS               = 31000;  //数据库访问错误
+        /** Http协议异常(保留与http状态码一致: 0-999) **/
+        public static final int SC_BAD_REQUEST             = 400;       //错误请求，请检查请求地址及参数
+        public static final int SC_UNAUTHORIZED            = 401;       //未通过身份验证(用户名或密码错误)
+        public static final int SC_FORBIDDEN               = 403;       //服务器拒绝请求或非法访问
+        public static final int SC_NOT_FOUND               = 404;       //请求资源未找到，请检查请求地址及参数
+        public static final int SC_REQUEST_TIMEOUT         = 408;       //请求超时，请稍候重试
+        public static final int SC_INTERNAL_SERVER_ERROR   = 500;       //服务器内部错误，无法完成请求，请稍候重试
+        public static final int SC_BAD_GATEWAY             = 502;       //服务器宕机或正在升级
+        public static final int SC_SERVICE_UNAVAILABLE     = 503;       //服务暂不可用，服务器过载或停机维护，请稍候重试
 
-        /**通用类错误**/
-        public static final int E_VALIDATE_UNAUTHORIZED     = 40000;   //未授权的访问
-        public static final int E_VALIDATE_UNSIGNED        = 40001;   //参数未进行签名
-        public static final int E_VALIDATE_SIGN_UNMATCHED    = 40002;   //参数签名错误
-        public static final int E_VALIDATE_TOKEN_INVALID   = 40003;   //token错误
-        public static final int E_VALIDATE_MOBILE_INVALID  = 40004;   //手机号码格式不正确
+        /** 自定义异常类型代码 **/
+        /** 错误码格式为X001,X为模块编号；**/
+        /** 错误标识格式E_XXX_xxxxx,其中XXX为模块标识 **/
+        //用户模块
+        public static final int E_USER_NOT_EXIST               = 1001;     //用户不存在
+        public static final int E_USER_MOBILE_NOT_EXIST        = 1002;     //手机号不存在
+        public static final int E_USER_EMAIL_NOT_EXIST         = 1003;     //邮箱不存在
+        public static final int E_USER_PASSWORD_INCORRECT      = 1004;     //密码不正确
+        public static final int E_USER_MOBILE_HAS_EXIST        = 1005;     //手机号已经存在
+        public static final int E_USER_EMAIL_HAS_EXIST         = 10060;    //邮箱已经存在
+        public static final int E_USER_ACCOUNT_HAS_EXIST       = 10061;    //帐号已经存在
+        public static final int E_USER_STATE_NOT_ACTIVED       = 1006;     //用户未激活
+        public static final int E_USER_STATE_FREED             = 1007;     //用户已冻结
+        public static final int E_USER_STATE_DELETED           = 1008;     //用户已删除
 
-        public static final int E_SMS_CODE_NOT_MATCH       = 41000;   //短信验证码错误
-        public static final int E_SMS_CODE_EXPIRED         = 41001;   //短信验证码过期
-        public static final int E_SMS_CODE_USED            = 41002;   //短信验证码已使用
+        //角色权限模块
+        public static final int E_AUTH_MENU_NOT_FOUND      = 2001;   //权限菜单不存在
 
-        public static final int E_USER_ID_NOT_EXIST        = 42000;   //用户Id不存在
-        public static final int E_USER_MOBILE_NOT_EXIST    = 42001;   //用户手机号不存在
-        public static final int E_USER_PASSWORD_NOT_MATCH  = 42002;   //用户密码不正确
-        public static final int E_USER_STATE_UNACTIVATED   = 42003;   //用户未激活
-        public static final int E_USER_STATE_FROZEN        = 42004;   //用户已冻结
-        public static final int E_USER_STATE_DELETED       = 42005;   //用户已删除
+        //内容管理模块
+        public static final int E_CMS_ARTICLE_NOT_FOUND     = 3001;  //文章未找到
+        public static final int E_CMS_CATEGORY_NOT_SUPPORT  = 3042;  //文章分类不支持
 
-        public static final int E_COMMUNITY_ID_NOT_EXIST   = 43000;   //小区id不存在
+    }
 
-        public static final int E_COMMUNITY_ID_IS_ENOUGH   = 43001;   //数据库已存在数据
+    public static class Msg {
+        public static final String ACTION_SUCCESS             = "操作成功";
+        public static final String ACTION_FAILED              = "操作失败";
+
+        public static final String E_UNKNOWN_ERROR = "未知错误";
+        public static final String E_PARAM_ERROR	= "参数错误";
+        public static final String E_PARAM_EMPTY	= "参数为空";
+        public static final String E_PARAM_VALIDATE_ERROR = "参数验证错误";
+        public static final String E_TOKEN_EXPIRED	= "TOKEN已过期";
+        public static final String E_TOKEN_EMPTY	= "TOKEN参数缺失";
+        public static final String E_TOKEN_INVALID	= "TOKEN不合法";
+        public static final String E_ACCESS_NOT_AUTH	= "访问资源未授权";
+        public static final String E_ACCESS_NOT_FOUND = "访问资源未找到";
+        public static final String E_ACCESS_TIMEOUT  = "访问资源超时";
+        public static final String E_ACCESS_LIMIT = "访问受限";
+        public static final String E_DATA_NOT_FOUND = "数据为找到";
+        public static final String E_DATA_EXIST = "数据已存在";
+        public static final String E_DATA_ERROR = "数据错误";
+        public static final String E_DATA_VALIDATE_ERROR = "数据验证错误";
+        public static final String E_THIRDPARTY_ERROR = "第三方系统错误";
+        public static final String E_PARSE_JSON = "json解析错误";
+        public static final String E_PARSE_DATE = "date日期解析错误";
+        public static final String E_LOGIC_ERROR = "逻辑层操作错误";
+        public static final String E_MODEL_ERROR = "模型层操作错误";
+        public static final String E_DB_ERROR = "数据库操作错误";
+        public static final String E_CODE_INCORRECT = "验证码不正确";
+        public static final String E_CODE_EXPIRED = "验证码已过期";
+        public static final String E_CODE_USED = "验证码已使用";
+        public static final String E_RISK_ASSE_CODE_CHECK = "[风险评估]需要验证码检测";
+        public static final String E_RISK_ASSE_HUMAN_CHECK = "[风险评估]需要人类检测";
+
+        /** Http协议异常(保留与http状态码一致: 0-999) **/
+        public static final String SC_BAD_REQUEST             = "错误请求，请检查请求地址及参数";
+        public static final String SC_UNAUTHORIZED            = "未通过身份验证(用户名或密码错误)";
+        public static final String SC_FORBIDDEN               = "服务器拒绝请求或非法访问";
+        public static final String SC_NOT_FOUND               = "请求资源未找到，请检查请求地址及参数";
+        public static final String SC_REQUEST_TIMEOUT         = "请求超时，请稍候重试";
+        public static final String SC_INTERNAL_SERVER_ERROR   = "服务器内部错误，无法完成请求，请稍候重试";
+        public static final String SC_BAD_GATEWAY             = "服务器宕机或正在升级";
+        public static final String SC_SERVICE_UNAVAILABLE     = "服务暂不可用，服务器过载或停机维护，请稍候重试";
+
+        /** 自定义异常类型代码 **/
+        /** 错误码格式为X001,X为模块编号；**/
+        /** 错误标识格式E_XXX_xxxxx,其中XXX为模块标识 **/
+        //用户模块
+        public static final String E_USER_NOT_EXIST               = "用户不存在";
+        public static final String E_USER_MOBILE_NOT_EXIST        = "手机号不存在";
+        public static final String E_USER_EMAIL_NOT_EXIST         = "邮箱不存在";
+        public static final String E_USER_PASSWORD_INCORRECT      = "密码不正确";
+        public static final String E_USER_MOBILE_HAS_EXIST        = "手机号已经存在";
+        public static final String E_USER_EMAIL_HAS_EXIST         = "邮箱已经存在";
+        public static final String E_USER_ACCOUNT_HAS_EXIST       = "帐号已经存在";
+        public static final String E_USER_STATE_NOT_ACTIVED       = "用户未激活";
+        public static final String E_USER_STATE_FREED             = "用户已冻结";
+        public static final String E_USER_STATE_DELETED           = "用户已删除";
+
+        //角色权限模块
+        public static final String E_AUTH_MENU_NOT_FOUND      = "权限菜单不存在";
+
+        //内容管理模块
+        public static final String E_CMS_ARTICLE_NOT_FOUND     = "文章未找到";
+        public static final String E_CMS_CATEGORY_NOT_SUPPORT  = "文章分类不支持";
     }
 }

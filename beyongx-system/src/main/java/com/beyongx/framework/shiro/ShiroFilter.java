@@ -1,8 +1,11 @@
 package com.beyongx.framework.shiro;
 
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.beyongx.common.vo.Result;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -20,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ShiroFilter extends AuthenticatingFilter {
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthorizingRealm.class);
 
-    private  Gson gson = new Gson();
+    private  Gson gson = new GsonBuilder().serializeNulls().create();
 
     private Result responseResult = Result.error(Result.Code.ACTION_FAILED, "验证失败");
 
@@ -45,7 +48,7 @@ public class ShiroFilter extends AuthenticatingFilter {
             HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
             String httpMethod = httpServletRequest.getMethod();
             String requestURI = httpServletRequest.getRequestURI();
-            responseResult = Result.error(Result.Code.E_PARAM_ERROR, "Token emtpy");
+            responseResult = Result.error(Result.Code.E_TOKEN_EMPTY, Result.Msg.E_TOKEN_EMPTY);
             logger.info("请求 {} 的Token为空 请求类型 {}", requestURI, httpMethod);
             return false;
         }
@@ -53,10 +56,22 @@ public class ShiroFilter extends AuthenticatingFilter {
 
         try {
             this.executeLogin(request, response);
+        } catch (TokenExpiredException e) {
+            responseResult = Result.error(Result.Code.E_TOKEN_EXPIRED, Result.Msg.E_TOKEN_EXPIRED);
+            return false;
         } catch (Exception e) {
             // 应用异常
             logger.info(e.getMessage());
-            responseResult = Result.error(Result.Code.ACTION_FAILED, e.getMessage());
+
+            String msg = e.getMessage();
+            if ("E_TOKEN_EXPIRED".equals(msg)) {
+                responseResult = Result.error(Result.Code.E_TOKEN_EXPIRED, Result.Msg.E_TOKEN_EXPIRED);
+            } else if ("E_TOKEN_EMPTY".equals(msg)) {
+                responseResult = Result.error(Result.Code.E_TOKEN_EMPTY, Result.Msg.E_TOKEN_EMPTY);
+            } else {
+                responseResult = Result.error(Result.Code.ACTION_FAILED, e.getMessage());
+            }            
+            
             return false;
         }
 

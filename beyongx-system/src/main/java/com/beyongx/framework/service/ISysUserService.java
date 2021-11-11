@@ -19,6 +19,8 @@ public interface ISysUserService extends IService<SysUser> {
 
     SysUser register(SignUser signUser);
 
+    SysUser login(SignUser signUser, String ip);
+
     SysUser findByAccount(String account);
 
     SysUser findByEmail(String email);

@@ -1,10 +1,14 @@
 package com.beyongx.framework.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.beyongx.common.exception.ServiceException;
 import com.beyongx.common.utils.DateTimeUtils;
 import com.beyongx.common.utils.PasswordEncoder;
+import com.beyongx.common.utils.ValidateUtils;
+import com.beyongx.common.vo.Result;
 import com.beyongx.framework.entity.SysRole;
 import com.beyongx.framework.entity.SysUser;
+import com.beyongx.framework.entity.meta.UserMeta;
 import com.beyongx.framework.mapper.SysRoleMapper;
 import com.beyongx.framework.mapper.SysUserMapper;
 import com.beyongx.framework.service.ISysUserService;
@@ -53,6 +57,43 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public SysUser login(SignUser signUser, String ip) {
+        String username = signUser.getUsername();
+        String plainPassword = signUser.getPassword(); //明文密码
+        
+        SysUser user = null;
+        if (ValidateUtils.isValidEmail(username)) {
+            user = this.findByEmail(signUser.getUsername());
+        } else if (ValidateUtils.isValidMobile(username)) {
+            user = this.findByMobile(signUser.getUsername());
+        } else {
+            user = this.findByAccount(signUser.getUsername());
+        }
+        
+        if (user == null) {
+            throw new ServiceException(Result.Code.E_USER_NOT_EXIST, "用户不存在!");
+        }
+        if (!this.verifyPassword(plainPassword, user)) {
+            throw new ServiceException(Result.Code.E_USER_PASSWORD_INCORRECT, "用户账号或密码不正确!");
+        }
+
+        
+        if (user.getStatus() == UserMeta.Status.DELETED.getCode()) {
+            throw new ServiceException(Result.Code.E_USER_NOT_EXIST, "用户不存在!");
+        }
+        if (user.getStatus() == UserMeta.Status.APPLY.getCode()) {
+            throw new ServiceException(Result.Code.E_USER_STATE_NOT_ACTIVED, "用户未激活!");
+        }
+        if (user.getStatus() == UserMeta.Status.FREED.getCode()) {
+            throw new ServiceException(Result.Code.E_USER_STATE_FREED, "用户已冻结!");
+        }
+
+        this.markLogin(user, ip);
+
+        return user;
+    }
+
+    @Override
     public SysUser findByAccount(String account) {
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", account);
@@ -92,5 +133,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public List<SysRole> listRoles(Integer uid) {
         return roleMapper.selectByUid(uid);
+    }
+
+    private void markLogin(SysUser user, String ip) {
+        user.setLastLoginIp(ip);
+        user.setLastLoginTime(new Date());
+        baseMapper.updateById(user);
     }
 }

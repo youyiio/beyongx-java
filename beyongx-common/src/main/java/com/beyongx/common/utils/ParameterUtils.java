@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Locale;
 
 public class ParameterUtils {
 
@@ -71,6 +73,35 @@ public class ParameterUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //获取参数串 &拼接
+    public static String getParams(HttpServletRequest request) {
+        StringBuffer paramsBuffer = new StringBuffer("");
+        Enumeration<String> paramNames = request.getParameterNames();
+        String paramName;
+
+        while (paramNames.hasMoreElements()) {
+            paramName = paramNames.nextElement();
+            if (paramName.toUpperCase(Locale.ENGLISH).contains("PASSWORD")) {
+                continue;
+            }
+            paramsBuffer.append(paramName).append("=");
+
+            String[] values = request.getParameterValues(paramName);
+
+            if (values != null) {
+                for (int i = 0; i < values.length; i++) {
+                    if (i > 0) {
+                        paramsBuffer.append(",");
+                    }
+                    paramsBuffer.append(values[i]);
+                }
+            }
+            paramsBuffer.append("&");
+        }
+
+        return paramsBuffer.toString();
     }
 }
 
