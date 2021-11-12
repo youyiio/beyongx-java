@@ -2,12 +2,11 @@ package com.beyongx.framework.shiro;
 
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.beyongx.common.utils.DateTimeUtils;
-import com.beyongx.framework.entity.SysMenu;
-import com.beyongx.framework.entity.SysRole;
-import com.beyongx.framework.entity.SysUser;
-import com.beyongx.framework.service.ISysMenuService;
-import com.beyongx.framework.service.ISysUserService;
+import com.beyongx.system.entity.SysMenu;
+import com.beyongx.system.entity.SysRole;
+import com.beyongx.system.entity.SysUser;
+import com.beyongx.system.service.ISysMenuService;
+import com.beyongx.system.service.ISysUserService;
 import com.beyongx.framework.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -86,7 +85,6 @@ public class ShiroRealm extends AuthorizingRealm {
             jwtUser = new JwtUser();
             jwtUser.setUid(user.getId());
             jwtUser.setUsername(username);
-            //jwtUser.setSalt(DateTimeUtils.getLongFormat(user.getRegisterTime()));
             jwtUser.setSalt(user.getSalt());
             //token过期
             boolean isVerify = JwtUtils.verify(token, jwtUser);

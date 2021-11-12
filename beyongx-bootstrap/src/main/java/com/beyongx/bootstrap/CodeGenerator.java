@@ -26,7 +26,7 @@ public class CodeGenerator {
     public static final String DATABASE_PASSWORD = "F05k[29_D$I#^1Zmnq6rAPu>";
 
     public static final String MODULE_ROOT_PACKAGE_NAME = "com.beyongx"; //模块根包名，小写
-    public static final String MODULE_NAME = "framework"; //模块子包名，小写
+    public static final String MODULE_NAME = "system"; //模块子包名，小写
     public static final String MAVEN_MODULE_NAME = "beyongx-system"; //springboot模块名,小写
 
     // 是否生成控制器开关

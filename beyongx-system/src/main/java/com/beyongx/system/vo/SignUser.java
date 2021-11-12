@@ -1,4 +1,4 @@
-package com.beyongx.framework.vo;
+package com.beyongx.system.vo;
 
 import com.beyongx.common.validation.group.Always;
 import lombok.Data;
