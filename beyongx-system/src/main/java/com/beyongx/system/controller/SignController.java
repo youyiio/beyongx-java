@@ -7,6 +7,7 @@ import com.beyongx.common.validation.group.Always;
 import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.meta.UserMeta;
+import com.beyongx.framework.service.ICodeService;
 import com.beyongx.framework.shiro.JwtUser;
 import com.beyongx.framework.shiro.JwtUtils;
 import com.beyongx.system.service.ISysActionLogService;
@@ -43,7 +44,9 @@ public class SignController {
     private ISysUserService userService;
     @Autowired
     private ISysActionLogService actionLogService;
-    
+    @Autowired
+    private ICodeService codeService;
+
     @PostMapping(value = "/login")
     public Result login(@Validated({Always.class,SignUser.Login.class}) @RequestBody SignUser signUser, HttpServletRequest request) {
 
@@ -106,11 +109,18 @@ public class SignController {
         String username = signUser.getUsername();
         String code = signUser.getCode();
         //验证码验证
+        boolean check = false;
         if (ValidateUtils.isValidEmail(username)) {
-            
+            check = codeService.checkCode(ICodeService.TYPE_REGISTER, username, code);
         } else if (ValidateUtils.isValidMobile(username)) {
-            
+            check = codeService.checkCode(ICodeService.TYPE_REGISTER, username, code);
         }
+        if (!check) {
+            return Result.error(Result.Code.E_CODE_INCORRECT, Result.Msg.E_CODE_INCORRECT);
+        }
+
+        //消费验证码
+        codeService.consumeCode(ICodeService.TYPE_REGISTER, username, code);
 
         String ip = IpUtils.getIpAddr(request);
         SysUser user = userService.register(signUser, ip);
@@ -120,7 +130,12 @@ public class SignController {
 
         Map<String, Object> data = new HashMap<>();
         data.put("uid", user.getId());
-        data.put("username", signUser.getUsername());
+        data.put("nickname", user.getNickname());
+        data.put("account", user.getAccount());
+        data.put("mobile", user.getMobile());
+        data.put("email", user.getEmail());
+        data.put("status", user.getStatus());
+        data.put("registerTime", user.getRegisterTime());
 
         return Result.success(data);
     }
