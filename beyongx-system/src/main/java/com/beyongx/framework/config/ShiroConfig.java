@@ -26,7 +26,7 @@ public class ShiroConfig {
     private String[] jwtActionExcludes = {
         "/api/sign/login", //登录
         "/api/sign/register", //注册
-        "/api/sms/sendcode", //发送验证码
+        "/api/sms/sendCode", //发送验证码
         "/api/sms/login" //短信登录
     };
 

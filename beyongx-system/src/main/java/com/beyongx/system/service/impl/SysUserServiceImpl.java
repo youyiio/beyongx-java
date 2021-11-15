@@ -42,7 +42,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         String account = RandomStringUtils.randomAscii(20);
         String mobile = RandomStringUtils.randomAscii(11);
-        String email = mobile + "@" + RandomStringUtils.randomAlphabetic(6) + ".com";
+        String email = mobile + "@" + RandomStringUtils.randomAlphabetic(6).toLowerCase() + ".com";
         if (ValidateUtils.isValidEmail(username)) {
             email = username;
         } else if (ValidateUtils.isValidMobile(username)) {
@@ -66,9 +66,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         user.setRegisterIp(ip);
         
         //密码加密SHA-256
-        String salt = RandomStringUtils.randomAscii(24);
+        String salt = RandomStringUtils.randomAscii(32);
         String password = PasswordEncoder.encodePassword(signUser.getPassword(), salt);
         user.setPassword(password);
+        user.setSalt(salt);
 
         baseMapper.insert(user);
 

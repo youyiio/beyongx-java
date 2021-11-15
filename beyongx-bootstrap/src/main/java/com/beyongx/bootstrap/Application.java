@@ -9,10 +9,10 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGenerator;
 
-@SpringBootApplication(scanBasePackages = {"com.beyongx", "cn.airsafety"}, exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
+@SpringBootApplication(scanBasePackages = {"com.beyongx"}, exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
 // @MapperScan已经使用了DataSourceConfig设置
 // @MapperScan(basePackages={"com.beyongx.framework.mapper", "cn.airsafety.sms.mapper"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
-@ComponentScan(basePackages={"com.beyongx.bootstrap", "com.beyongx.common", "com.beyongx.framework", "cn.airsafety.sms"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
+@ComponentScan(basePackages={"com.beyongx.bootstrap", "com.beyongx.common", "com.beyongx.framework", "com.beyongx.system"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 @EnableCaching
 public class Application {
 

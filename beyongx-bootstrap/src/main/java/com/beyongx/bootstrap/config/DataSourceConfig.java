@@ -24,7 +24,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = {"com.beyongx.framework.mapper", "cn.airsafety.sms.mapper"}, sqlSessionFactoryRef = "beyongxSqlSessionFactory", nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
+@MapperScan(basePackages = {"com.beyongx.framework.mapper", "com.beyongx.*.mapper"}, sqlSessionFactoryRef = "beyongxSqlSessionFactory", nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 public class DataSourceConfig {
     // 将这个对象放入Spring容器中
     @Bean(name = "beyongxDataSource")

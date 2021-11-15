@@ -1,5 +1,7 @@
 package com.beyongx.framework.service;
 
+import com.beyongx.common.exception.ServiceException;
+
 public interface ICodeService {
     
     public static final int STATUS_UNUSED = 1; //未使用
