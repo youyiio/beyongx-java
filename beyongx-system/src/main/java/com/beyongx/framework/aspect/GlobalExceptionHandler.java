@@ -1,4 +1,4 @@
-package com.beyongx.common.aspect;
+package com.beyongx.framework.aspect;
 
 import com.beyongx.common.vo.Result;
 import lombok.extern.slf4j.Slf4j;

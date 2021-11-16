@@ -15,5 +15,9 @@ import java.util.List;
  */
 public interface ISysMenuService extends IService<SysMenu> {
 
-    List<SysMenu> listMenus(Integer roleId);
+    List<SysMenu> listMenusByRoleId(Integer roleId);
+
+    List<SysMenu> listMenusByRoleIds(Integer[] roleIds);
+
+    List<SysMenu> listMenusByRoleIdsAndOther(Integer[] roleIds, Boolean isMenu);
 }

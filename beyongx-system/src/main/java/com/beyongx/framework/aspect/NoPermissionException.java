@@ -1,4 +1,4 @@
-package com.beyongx.common.exception;
+package com.beyongx.framework.aspect;
 
 import com.beyongx.common.vo.Result;
 import com.google.gson.Gson;

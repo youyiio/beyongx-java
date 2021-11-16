@@ -6,4 +6,22 @@
         select m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id and rm.role_id = #{roleId}
     </select>
 
+    <select id="selectByRoleIds" resultType="SysMenu">
+        select m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id and rm.role_id in 
+        <foreach collection="roleIds" item="roleId">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <select id="selectByRoleIdsAndOther" resultType="SysMenu">
+        select m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id 
+        <if test="isMenu != null">
+            and m.is_menu = #{isMenu}
+        </if>
+        and rm.role_id in 
+        <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+        order by m.pid asc, m.sort asc
+    </select>
 </mapper>

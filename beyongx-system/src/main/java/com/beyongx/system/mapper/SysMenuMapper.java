@@ -17,4 +17,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
     List<SysMenu> selectByRoleId(Integer roleId);
 
+    List<SysMenu> selectByRoleIds(Integer[] roleIds);
+
+    List<SysMenu> selectByRoleIdsAndOther(Integer[] roleIds, Boolean isMenu);
 }

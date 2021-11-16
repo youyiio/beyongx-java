@@ -17,4 +17,9 @@ public class UserMeta {
             return code;
         }
     }
+
+    public static enum Mode {
+        SINGLE, //单值模式
+        MULTIPLE, //多值模式
+    }
 }

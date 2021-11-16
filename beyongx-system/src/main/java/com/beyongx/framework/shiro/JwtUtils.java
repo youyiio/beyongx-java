@@ -71,6 +71,10 @@ public class JwtUtils {
         return jwtUser;
     }
 
+    /**
+     * 获取主题中jwtuser, 仅限安全验证已走完
+     * @return JwtUser
+     */
     public static JwtUser getUser() {
         JwtUser user = (JwtUser) SecurityUtils.getSubject().getPrincipal();
         return user;

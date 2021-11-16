@@ -1,4 +1,4 @@
-package com.beyongx.common.aspect;
+package com.beyongx.framework.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
