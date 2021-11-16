@@ -65,6 +65,11 @@ public class SysMenu implements Serializable {
     private Boolean isMenu;
 
     /**
+     * 权限
+     */
+    private String permission;
+
+    /**
      * 状态 -1.删除;1.激活;2.暂停;
      */
     private Boolean status;

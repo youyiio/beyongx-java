@@ -7,6 +7,7 @@ import com.beyongx.common.validation.group.Always;
 import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.meta.UserMeta;
+import com.beyongx.framework.config.ShiroConfig;
 import com.beyongx.framework.service.ICodeService;
 import com.beyongx.framework.shiro.JwtUser;
 import com.beyongx.framework.shiro.JwtUtils;
@@ -34,6 +35,9 @@ import javax.servlet.http.HttpSession;
 @RequestMapping(value = "/api/sign")
 @Slf4j
 public class SignController {
+
+    @Autowired
+    private ShiroConfig shiroConfig; 
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -90,11 +94,9 @@ public class SignController {
         JwtUser jwtUser = new JwtUser();
         jwtUser.setUid(user.getId());
         jwtUser.setUsername(user.getAccount());
-        //jwtUser.setSalt(DateTimeUtils.getLongFormat(user.getRegisterTime()));
-        jwtUser.setSalt(user.getSalt());
 
         //通过认证, 生成签名
-        String token = JwtUtils.sign(jwtUser);
+        String token = JwtUtils.sign(jwtUser, shiroConfig.getSecret(), shiroConfig.getExpired());
         Map<String, Object> data = new HashMap<>();
         data.put("token", token);
 

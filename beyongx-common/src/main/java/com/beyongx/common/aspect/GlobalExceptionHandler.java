@@ -1,6 +1,5 @@
 package com.beyongx.common.aspect;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.beyongx.common.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 

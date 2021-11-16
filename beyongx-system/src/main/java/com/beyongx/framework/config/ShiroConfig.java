@@ -6,29 +6,36 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
 @Configuration
+@Data
+@Slf4j
 public class ShiroConfig {
 
-    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ShiroConfig.class);
-
     //从配置文件里面读取是否需要启动登录认证的开关，默认true
-    //@Value("${jwt.auth}")
+    @Value("${shiro.auth}")
     private boolean auth = true;
 
+    @Value("${shiro.jwt.secret}")
+    private String secret;
+
+    @Value("${shiro.jwt.expired}")
+    private Long expired;
+
     //jwt验证例外列表
-    private String[] jwtActionExcludes = {
-        "/api/sign/login", //登录
-        "/api/sign/register", //注册
-        "/api/sms/sendCode", //发送验证码
-        "/api/sms/login" //短信登录
-    };
+    @Value("${shiro.jwt.action_excludes}")
+    private String[] jwtActionExcludes;
 
     //配置拦截器
     @Bean
@@ -57,7 +64,7 @@ public class ShiroConfig {
         filterMap.put("/**", openAuth);
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
-        logger.info("Shiro拦截器工厂类注入成功");
+        log.info("Shiro拦截器工厂类注入成功");
 
         return shiroFilterFactoryBean;
     }

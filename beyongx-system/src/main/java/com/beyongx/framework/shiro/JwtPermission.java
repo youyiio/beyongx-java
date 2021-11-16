@@ -1,5 +1,7 @@
 package com.beyongx.framework.shiro;
 
+import java.io.Serializable;
+
 /**
  *
  * 权限
@@ -7,7 +9,8 @@ package com.beyongx.framework.shiro;
  * @Date 2020/5/29 13:35
  * @Version 1.0
  **/
-public class JwtPermission {
+public class JwtPermission implements Serializable {
+    
     private Integer id; //权限id
 
     private String name; //权限名称

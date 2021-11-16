@@ -1,6 +1,10 @@
 package com.beyongx.system.service;
 
+import com.beyongx.system.entity.SysMenu;
 import com.beyongx.system.entity.SysRole;
+
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysRoleService extends IService<SysRole> {
 
+    List<SysMenu> listMenu(Integer roleId);
 }

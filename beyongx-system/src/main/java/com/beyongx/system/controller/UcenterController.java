@@ -2,6 +2,7 @@ package com.beyongx.system.controller;
 
 
 import com.beyongx.common.vo.Result;
+import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.service.ISysUserService;
 import com.beyongx.framework.shiro.JwtUser;
@@ -11,7 +12,9 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,8 +45,14 @@ public class UcenterController {
         data.put("nickname", user.getNickname());
         data.put("headUrl", user.getHeadUrl());
         data.put("description", "");
-        //data.put("roles", user.getRoleList());
-        data.put("roles", new String[]{"admin", "test"});
+        
+        List<SysRole> roleList = userService.listRoles(user.getId());
+        List<String> roles = new ArrayList<>();
+        for (SysRole role : roleList) {
+            roles.add(role.getName());
+        }
+        
+        data.put("roles", roles);
 
         return Result.success(data);
     }

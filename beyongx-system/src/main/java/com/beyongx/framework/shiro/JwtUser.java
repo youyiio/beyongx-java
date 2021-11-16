@@ -1,5 +1,6 @@
 package com.beyongx.framework.shiro;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,21 +10,20 @@ import java.util.List;
  * @Date 2020/5/29 13:16
  * @Version 1.0
  **/
-public class JwtUser {
+public class JwtUser implements Serializable {
+    
     private Integer uid;
     private String username;
     private String password;
-    private String salt; //盐值
     private List<JwtRole> roleList;
 
     public JwtUser() {
     }
 
-    public JwtUser(Integer uid, String username, String password, String salt, List<JwtRole> roleList) {
+    public JwtUser(Integer uid, String username, String password, List<JwtRole> roleList) {
         this.uid = uid;
         this.username = username;
         this.password = password;
-        this.salt = salt;
         this.roleList = roleList;
     }
 
@@ -57,13 +57,5 @@ public class JwtUser {
 
     public void setRoleList(List<JwtRole> roleList) {
         this.roleList = roleList;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 }

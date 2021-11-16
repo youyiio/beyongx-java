@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.beyongx.common.validation.group.Always;
 import com.beyongx.common.vo.Result;
+import com.beyongx.framework.config.ShiroConfig;
 import com.beyongx.framework.service.ICodeService;
 import com.beyongx.framework.shiro.JwtUser;
 import com.beyongx.framework.shiro.JwtUtils;
@@ -30,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/api/sms")
 @Slf4j
 public class SmsController {
+    
+    @Autowired
+    private ShiroConfig shiroConfig;
     
     @Autowired
     private ICodeService codeService;
@@ -74,11 +78,9 @@ public class SmsController {
         JwtUser jwtUser = new JwtUser();
         jwtUser.setUid(user.getId());
         jwtUser.setUsername(user.getAccount());
-        //jwtUser.setSalt(DateTimeUtils.getLongFormat(user.getRegisterTime()));
-        jwtUser.setSalt(user.getSalt());
 
         //通过认证, 生成签名
-        String token = JwtUtils.sign(jwtUser);
+        String token = JwtUtils.sign(jwtUser, shiroConfig.getSecret(), shiroConfig.getExpired());
         Map<String, Object> data = new HashMap<>();
         data.put("token", token);
         

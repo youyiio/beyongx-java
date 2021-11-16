@@ -22,7 +22,7 @@ public class TestUserDao {
 
         ArrayList<JwtRole> userRoleArrayList1 = new ArrayList<>();
         userRoleArrayList1.add(new JwtRole(1, "老板", permissionList1));
-        JwtUser user1 = new JwtUser(1, "admin", "123456", "iwejfiwjf", userRoleArrayList1);
+        JwtUser user1 = new JwtUser(1, "admin", "123456", userRoleArrayList1);
 
         ArrayList<JwtPermission> permissionList2 = new ArrayList<>();
         permissionList2.add(new JwtPermission(1,"shop", "/"));
@@ -30,7 +30,7 @@ public class TestUserDao {
         permissionList2.add(new JwtPermission(3,"order", "/"));
         ArrayList<JwtRole> userRoleArrayList2 = new ArrayList<>();
         userRoleArrayList2.add(new JwtRole(2, "经理", permissionList2));
-        JwtUser user2 = new JwtUser(2, "xiaoming", "123456", "jfiosjfos", userRoleArrayList2);
+        JwtUser user2 = new JwtUser(2, "xiaoming", "123456", userRoleArrayList2);
 
         userList.add(user1);
         userList.add(user2);

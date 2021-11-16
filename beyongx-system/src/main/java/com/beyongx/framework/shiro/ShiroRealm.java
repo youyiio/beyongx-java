@@ -2,11 +2,8 @@ package com.beyongx.framework.shiro;
 
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.beyongx.system.entity.SysMenu;
-import com.beyongx.system.entity.SysRole;
-import com.beyongx.system.entity.SysUser;
-import com.beyongx.system.service.ISysMenuService;
-import com.beyongx.system.service.ISysUserService;
+import com.beyongx.framework.config.ShiroConfig;
+import com.beyongx.framework.service.IJwtUserService;
 import com.beyongx.framework.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -21,20 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class ShiroRealm extends AuthorizingRealm {
-    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthorizingRealm.class);
+
+    @Autowired
+    private ShiroConfig shiroConfig;
 
     @Autowired
     @Lazy
-    private ISysUserService userService;
-
-    @Autowired
-    @Lazy
-    private ISysMenuService menuService;
+    private IJwtUserService userService;
 
     @Autowired
     @Lazy
@@ -59,7 +54,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException, TokenExpiredException {
-        logger.info("1.执行认证逻辑");
+        log.info("1.执行认证逻辑");
 
         //获得token
         String token = (String) authenticationToken.getCredentials();
@@ -68,38 +63,31 @@ public class ShiroRealm extends AuthorizingRealm {
         }
 
         //获得token中的用户信息
-        String username = JwtUtils.getUsername(token);
+        JwtUser jwtUser = JwtUtils.decode(token);
         //判空
-        if (StringUtils.isBlank(username)) {
+        if (jwtUser == null || jwtUser.getUid() == null || jwtUser.getUid() <= 0) {
             throw new AuthenticationException("E_TOKEN_EXPIRED");
         }
 
-        JwtUser jwtUser = null;
         try {
-            SysUser user = userService.findByAccount(username);
-            //查询用户是否存在
-            if (user == null) {
-                throw new AuthenticationException("E_TOKEN_INVALID");
-            }
-
-            jwtUser = new JwtUser();
-            jwtUser.setUid(user.getId());
-            jwtUser.setUsername(username);
-            jwtUser.setSalt(user.getSalt());
             //token过期
-            boolean isVerify = JwtUtils.verify(token, jwtUser);
+            boolean isVerify = JwtUtils.verify(token, jwtUser, shiroConfig.getSecret());
             if (!isVerify) {
                 throw new AuthenticationException("E_TOKEN_INVALID");
             }
 
-            //拉取角色并填充JwtUser
-            pullRolesAndPadding(jwtUser);
+            Integer uid = jwtUser.getUid();
+            jwtUser = userService.getByUId(uid);            
+            //查询用户是否存在
+            if (jwtUser == null) {
+                throw new AuthenticationException("E_TOKEN_INVALID");
+            }
         } catch (TokenExpiredException e) {
-            logger.warn("throw TokenExpiredException", e);
+            log.warn("throw TokenExpiredException", e);
 
             throw new AuthenticationException("E_TOKEN_EXPIRED");
         } catch (Exception e) {
-            logger.warn("throw AuthenticationException", e);
+            log.warn("throw AuthenticationException", e);
 
             throw e;
         }
@@ -115,7 +103,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        logger.info("2.用户角色权限认证");
+        log.info("2.用户角色权限认证");
 
         //获取用户登录信息
         JwtUser user = (JwtUser) principals.getPrimaryPrincipal();
@@ -133,29 +121,4 @@ public class ShiroRealm extends AuthorizingRealm {
         return authorizationInfo;
     }
 
-    /**
-     * 拉取角色并填充JwtUser
-     * @param jwtUser
-     */
-    private void pullRolesAndPadding(JwtUser jwtUser) {
-        // 查询系统角色，建议缓存（如redis)
-        List<SysRole> sysRoleList = userService.listRoles(jwtUser.getUid());
-
-        List<JwtRole> roleList = new ArrayList<>();
-        for (SysRole sysRole : sysRoleList) {
-
-            //查询用户权限
-            List<SysMenu> sysMenuList = menuService.listMenus(sysRole.getId());
-            List<JwtPermission> permissionList = new ArrayList<>();
-            for (SysMenu sysMenu : sysMenuList) {
-                JwtPermission permission = new JwtPermission(sysMenu.getId(), sysMenu.getName(), sysMenu.getPath());
-                permissionList.add(permission);
-            }
-
-            JwtRole role = new JwtRole(sysRole.getId(), sysRole.getName(), permissionList);
-            roleList.add(role);
-        }
-
-        jwtUser.setRoleList(roleList);
-    }
 }

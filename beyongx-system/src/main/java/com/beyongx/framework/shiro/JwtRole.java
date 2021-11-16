@@ -1,5 +1,6 @@
 package com.beyongx.framework.shiro;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,9 +10,12 @@ import java.util.List;
  * @Date 2020/5/29 13:34
  * @Version 1.0
  **/
-public class JwtRole {
+public class JwtRole implements Serializable {
+
     private Integer roleId;
+
     private String roleName;
+    
     List<JwtPermission> permissionList;
 
     public JwtRole(Integer roleId, String roleName, List<JwtPermission> permissionList) {

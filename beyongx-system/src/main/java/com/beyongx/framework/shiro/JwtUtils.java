@@ -21,7 +21,7 @@ import java.util.Date;
 public class JwtUtils {
 
     // 过期时间60分钟
-    public static final long EXPIRE_TIME = 60 * 60 * 1000;
+    //public static final long EXPIRE_TIME = 60 * 60 * 1000;
 
     /**
      * 校验token是否正确
@@ -30,10 +30,10 @@ public class JwtUtils {
      * @param jwtUser JwtUser封装对象
      * @return 是否正确
      */
-    public static boolean verify(String token, JwtUser jwtUser) {
+    public static boolean verify(String token, JwtUser jwtUser, String secret) {
         try {
             token = toVerifyToken(token);
-            Algorithm algorithm = Algorithm.HMAC256(jwtUser.getSalt());
+            Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("uid", jwtUser.getUid())
                     .withClaim("username", jwtUser.getUsername())
@@ -50,16 +50,25 @@ public class JwtUtils {
     /**
      * 获得token中的信息无需secret解密也能获得
      *
-     * @return token中包含的用户名
+     * @return JwtUser
      */
-    public static String getUsername(String token) {
+    public static JwtUser decode(String token) {
+        JwtUser jwtUser = null;
         try {
             token = toVerifyToken(token);
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("username").asString();
+
+            String username = jwt.getClaim("username").asString();
+            Integer uid = jwt.getClaim("uid").asInt();
+
+            jwtUser = new JwtUser();
+            jwtUser.setUid(uid);
+            jwtUser.setUsername(username);
         } catch (JWTDecodeException e) {
             return null;
         }
+
+        return jwtUser;
     }
 
     public static JwtUser getUser() {
@@ -68,15 +77,16 @@ public class JwtUtils {
     }
 
     /**
-     * 生成签名, {EXPIRE_TIME}后过期
-     *
-     * @param jwtUser JwtUser封装对象
-     * @return 加密的token
+     * 生成签名, expired后过期
+     * @param jwtUser
+     * @param secret
+     * @param expired 秒
+     * @return
      */
-    public static String sign(JwtUser jwtUser) {
+    public static String sign(JwtUser jwtUser, String secret, long expired) {
 
-        Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
-        Algorithm algorithm = Algorithm.HMAC256(jwtUser.getSalt());
+        Date date = new Date(System.currentTimeMillis() + expired * 1000);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         // 附带username信息
         return "Bear " + JWT.create()
                 .withClaim("uid", jwtUser.getUid())
