@@ -99,3 +99,12 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # 返回类型为Map,显示null对应的字段
     call-setters-on-nulls: true
+
+#shiro 配置
+shiro:
+  auth: true
+  jwt:
+    alg: HS256
+    secret: xp1yutwt8Fxj5XEzes4j-X4tCBQwE0
+    expired: 3600  # 秒
+    action_excludes: /api/sign/login,/api/sign/register,/api/sms/sendCode,/api/sms/login
