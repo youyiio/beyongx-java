@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#ps -ef|grep rxapi|grep -v grep|cut -c 9-15|xargs kill -9
+#ps -ef|grep rxapi|grep -v grep|awk '{print $2}'|xargs kill -9
 
 lsof -i:8080
 
@@ -17,7 +17,8 @@ echo 'start process...'
 # 找不到java
 source /etc/profile
 
-nohup java -jar smart-school-1.0.0.jar --spring.profiles.active=dev >catalina.out 2>&1 &
+main_jar=$(find . -type f -name '*.jar')
+nohup java -jar $main_java --spring.profiles.active=dev >catalina.out 2>&1 &
 
 echo 'wait 15s...'
 # gitlab-runner may exit 1

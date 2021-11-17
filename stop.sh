@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#ps -ef|grep rxapi|grep -v grep|cut -c 9-15|xargs kill -9
+#ps -ef|grep rxapi|grep -v grep|awk '{print $2}'|xargs kill -9
 
 lsof -i:8080
 
