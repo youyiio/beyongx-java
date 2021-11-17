@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.beyongx</groupId>
-	<artifactId>beyongx-app</artifactId>
+	<artifactId>beyongx-java</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1</version>
 
-	<name>beyongx-app</name>
+	<name>beyongx-java</name>
 	<description>Beyongx management system for java project.</description>
     <url>https://www.beyongx.com</url>
 	

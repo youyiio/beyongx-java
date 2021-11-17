@@ -69,7 +69,7 @@ public class JwtUserService implements IJwtUserService {
 
     @Override
     public List<JwtPermission> findByRoleId(Integer roleId) {
-        List<SysMenu> menuList = roleService.listMenu(roleId);
+        List<SysMenu> menuList = roleService.listMenu(roleId, "api");
 
         List<JwtPermission> permissionList = new ArrayList<>();
         for (SysMenu menu : menuList) {

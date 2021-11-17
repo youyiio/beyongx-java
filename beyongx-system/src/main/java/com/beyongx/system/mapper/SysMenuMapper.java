@@ -15,9 +15,9 @@ import java.util.List;
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
-    List<SysMenu> selectByRoleId(Integer roleId);
+    List<SysMenu> selectByRoleId(Integer roleId, String belongsTo);
 
-    List<SysMenu> selectByRoleIds(Integer[] roleIds);
+    List<SysMenu> selectByRoleIds(Integer[] roleIds, String belongsTo);
 
-    List<SysMenu> selectByRoleIdsAndOther(Integer[] roleIds, Boolean isMenu);
+    List<SysMenu> selectByRoleIdsAndOther(Integer[] roleIds, String belongsTo, Boolean isMenu);
 }

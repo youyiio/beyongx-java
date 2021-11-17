@@ -25,9 +25,14 @@ public class SysRole implements Serializable {
     private Integer id;
 
     /**
-     * 名称
+     * 标识
      */
     private String name;
+
+    /**
+     * 名称
+     */
+    private String title;
 
     /**
      * 状态:1.激活;2.冻结;3.删除

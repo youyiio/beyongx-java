@@ -38,8 +38,8 @@ deploy_for_ci_job:
     - pwd
     - ls -l
     - mvn clean package -Dmaven.test.skip=true
-    - ls -l target/
-    - mv target/*.jar ./
+    - ls -l beyongx-bootstrap/target/
+    - mv beyongx-bootstrap/target/*.jar ./
     - tar -czf $bundle_name *.jar start.sh stop.sh
     - echo ${ci_server_ip}
     - echo $ci_ssh_port
@@ -58,8 +58,8 @@ deploy_for_cd_job:
     - pwd
     - ls -l
     - mvn clean package -Dmaven.test.skip=true
-    - ls -l target/
-    - mv target/*.jar ./
+    - ls -l beyongx-bootstrap/target/
+    - mv beyongx-bootstrap/target/*.jar ./
     - tar -czf $bundle_name *.jar start.sh stop.sh
     - echo ${cd_server_ip}
     - echo $cd_ssh_port

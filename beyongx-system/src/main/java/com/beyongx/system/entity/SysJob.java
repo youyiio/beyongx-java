@@ -25,9 +25,14 @@ public class SysJob implements Serializable {
     private Integer id;
 
     /**
-     * 名称
+     * 标识
      */
     private String name;
+
+    /**
+     * 名称
+     */
+    private String title;
 
     /**
      * 启用状态

@@ -116,7 +116,7 @@ public class UcenterController {
         }
 
         Integer[] roleIds = new Integer[roleIdList.size()];
-        List<SysMenu> menuList = menuService.listMenusByRoleIdsAndOther(roleIdList.toArray(roleIds), true);
+        List<SysMenu> menuList = menuService.listMenusByRoleIdsAndOther(roleIdList.toArray(roleIds), "api", null);
         
         List<MenuVo> menuVoList = menuList.stream().map(menu -> {
             MenuVo menuVo = new MenuVo();

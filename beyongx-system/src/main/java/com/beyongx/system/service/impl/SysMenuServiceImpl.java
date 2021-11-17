@@ -20,17 +20,17 @@ import java.util.List;
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
     @Override
-    public List<SysMenu> listMenusByRoleId(Integer roleId) {
-        return baseMapper.selectByRoleId(roleId);
+    public List<SysMenu> listMenusByRoleId(Integer roleId, String belongsTo) {
+        return baseMapper.selectByRoleId(roleId, belongsTo);
     }
 
     @Override
-    public List<SysMenu> listMenusByRoleIds(Integer[] roleIds) {
-        return baseMapper.selectByRoleIds(roleIds);
+    public List<SysMenu> listMenusByRoleIds(Integer[] roleIds, String belongsTo) {
+        return baseMapper.selectByRoleIds(roleIds, belongsTo);
     }
 
     @Override
-    public List<SysMenu> listMenusByRoleIdsAndOther(Integer[] roleIds, Boolean isMenu) {
-        return baseMapper.selectByRoleIdsAndOther(roleIds, isMenu);
+    public List<SysMenu> listMenusByRoleIdsAndOther(Integer[] roleIds, String belongsTo, Boolean isMenu) {
+        return baseMapper.selectByRoleIdsAndOther(roleIds, belongsTo, isMenu);
     }
 }
