@@ -40,7 +40,7 @@ deploy_for_ci_job:
     - mvn clean package -Dmaven.test.skip=true
     - ls -l beyongx-bootstrap/target/
     - mv beyongx-bootstrap/target/*.jar ./
-    - tar -czf $bundle_name *.jar start.sh stop.sh
+    - tar -czf $bundle_name *.jar start.sh stop.sh restart.sh
     - echo ${ci_server_ip}
     - echo $ci_ssh_port
     - ssh root@$ci_server_ip -p $ci_ssh_port "rm -fr $upload_path && mkdir $upload_path"
@@ -60,7 +60,7 @@ deploy_for_cd_job:
     - mvn clean package -Dmaven.test.skip=true
     - ls -l beyongx-bootstrap/target/
     - mv beyongx-bootstrap/target/*.jar ./
-    - tar -czf $bundle_name *.jar start.sh stop.sh
+    - tar -czf $bundle_name *.jar start.sh stop.sh restart.sh
     - echo ${cd_server_ip}
     - echo $cd_ssh_port
     - ssh root@$cd_server_ip -p $cd_ssh_port "rm -fr $upload_path && mkdir $upload_path"
