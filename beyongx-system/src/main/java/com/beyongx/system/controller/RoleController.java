@@ -1,9 +1,19 @@
 package com.beyongx.system.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.beyongx.common.vo.Result;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -15,6 +25,37 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/role")
+@Slf4j
 public class RoleController {
+
+    @RequiresPermissions("role:list")
+    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result list() {
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("role:query")
+    @GetMapping("/{id}")
+    public Result query(@PathVariable(value="id") Integer id) {
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("role:list")
+    @PostMapping("/create")
+    public Result create() {
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("role:edit")
+    @PostMapping("/edit")
+    public Result edit() {
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("role:list")
+    @DeleteMapping("/{id}")
+    public Result delete(@PathVariable(value="id") Integer id) {
+        return Result.success(null);
+    }
 
 }
