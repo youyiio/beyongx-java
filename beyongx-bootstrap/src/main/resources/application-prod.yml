@@ -25,9 +25,9 @@ spring:
     druid:
       db0:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://test.youyi.io:3306/smsdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-        username: smsdba
-        password: "%hKl9KO2n7CCe0d^7M]4c&!"
+        url: jdbc:mysql://test.youyi.io:3306/beyongxdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+        username: beyongxdba
+        password: "F05k[29_D$I#^1Zmnq6rAPu>"
         filters: stat,wall,slf4j,config
         max-active: 100
         initial-size: 1
