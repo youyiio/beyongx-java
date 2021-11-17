@@ -15,13 +15,17 @@ if [ ! -f "$deploy_path/start.sh" ]; then
 fi
 
 if [ "$deploy_first" = true ]; then
+  /bin/cp -fr restart.sh $deploy_path
   /bin/cp -fr start.sh $deploy_path
   /bin/cp -fr stop.sh $deploy_path
-  chmod +x start.sh
-  chmod +x stop.sh
+
+  chmod +x $deploy_path/restart.sh
+  chmod +x $deploy_path/start.sh
+  chmod +x $deploy_path/stop.sh
 fi
 
 /bin/cp -fr *.jar $deploy_path
 
 # 启动应用
-./start.sh
+cd $deploy_path
+./restart.sh

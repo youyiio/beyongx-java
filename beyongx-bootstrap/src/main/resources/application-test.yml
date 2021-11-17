@@ -11,7 +11,7 @@ server:
 
 ## 日志
 logging:
-  config: classpath:logback-prod.xml
+  config: classpath:logback-test.xml
   level:
     com:
       beyongx:
