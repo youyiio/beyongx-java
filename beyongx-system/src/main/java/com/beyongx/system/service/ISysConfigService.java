@@ -13,4 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysConfigService extends IService<SysConfig> {
 
+    SysConfig getByKey(String key);
+
+    SysConfig getByGroupAndKey(String group, String key);
+
 }

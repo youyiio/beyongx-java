@@ -1,6 +1,10 @@
 package com.beyongx.system.mapper;
 
 import com.beyongx.system.entity.CmsArticle;
+import com.beyongx.system.entity.CmsCategory;
+
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,4 +17,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CmsArticleMapper extends BaseMapper<CmsArticle> {
 
+    /** 关联表定义 start */
+
+    List<CmsCategory> selectCategorysById(Integer id);
+
+    /** 关联表定义 end */
 }

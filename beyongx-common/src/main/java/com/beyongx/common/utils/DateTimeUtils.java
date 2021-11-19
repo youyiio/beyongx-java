@@ -14,8 +14,8 @@ public class DateTimeUtils {
     public static final String LOCAL_LONG_DATE_FORMAT  = "yyyy-MM-dd HH:mm:ss";
     public static final String STANDARD_LONG_DATE_FORMAT  = "yyyy/MM/dd HH:mm:ss";
     public static final String STANDARD_SHORT_DATE_FORMAT = "yyyy/MM/dd";
-    
-    public static Date getCurrentDate() {
+
+    public static Date now() {
         return new Date(System.currentTimeMillis());
     }
     
@@ -73,6 +73,44 @@ public class DateTimeUtils {
         return parse(dateString, LOCAL_LONG_DATE_FORMAT);
     }
     
+    //今天，凌晨时间
+    public static Date today() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        
+        return calendar.getTime();
+    }
+
+    //明天，凌晨时间
+    public static Date tomorrow() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        
+        calendar.add(Calendar.DATE, 1);
+        return calendar.getTime();
+    }
+
+    //昨日，凌晨时间
+    public static Date yesterday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        
+        calendar.add(Calendar.DATE, -1);
+        return calendar.getTime();
+    }
+
     /**
      * modify the <code>date</code> with <code>offset</code> days <p>
      * 根据offset的值，修改date日期，当为正的时，获得offset天后的日期，当为负时，获得|offset|天前的日期;

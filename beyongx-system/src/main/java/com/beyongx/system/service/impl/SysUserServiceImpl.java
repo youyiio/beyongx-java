@@ -6,6 +6,7 @@ import com.beyongx.common.utils.DateTimeUtils;
 import com.beyongx.common.utils.PasswordEncoder;
 import com.beyongx.common.utils.ValidateUtils;
 import com.beyongx.common.vo.Result;
+import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.meta.UserMeta;
@@ -17,7 +18,6 @@ import com.beyongx.system.vo.SignUser;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,8 +33,6 @@ import java.util.List;
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
-    @Autowired
-    private SysRoleMapper roleMapper;
 
     @Override
     public SysUser register(SignUser signUser, String ip) {
@@ -152,7 +150,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public List<SysRole> listRoles(Integer uid) {
-        return roleMapper.selectByUid(uid);
+        return baseMapper.selectRolesById(uid);
+    }
+
+    @Override
+    public List<SysJob> listJobs(Integer uid) {
+        return baseMapper.selectJobsById(uid);
     }
 
     private void markLogin(SysUser user, String ip) {

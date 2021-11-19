@@ -1,29 +1,14 @@
-package com.beyongx.system.entity;
+package com.beyongx.system.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-/**
- * <p>
- * 系统字典表
- * </p>
- *
- * @author youyi.io
- * @since 2021-11-06
- */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class SysConfig implements Serializable {
-
+public class ConfigVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -34,13 +19,11 @@ public class SysConfig implements Serializable {
     /**
      * 字典组
      */
-    @TableField(value = "`group`")
     private String group;
 
     /**
      * 字典键
      */
-    @TableField(value = "`key`")
     private String key;
 
     /**
@@ -87,6 +70,4 @@ public class SysConfig implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-
-
 }

@@ -1,5 +1,6 @@
 package com.beyongx.system.service;
 
+import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -30,4 +31,6 @@ public interface ISysUserService extends IService<SysUser> {
     boolean verifyPassword(String plainPassword, SysUser user);
 
     List<SysRole> listRoles(Integer uid);
+
+    List<SysJob> listJobs(Integer uid);
 }

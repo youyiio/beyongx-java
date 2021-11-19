@@ -1,5 +1,8 @@
 package com.beyongx.framework.service;
 
+/**
+ * 风险评估接口
+ */
 public interface IRiskAsseService {
     
     /**

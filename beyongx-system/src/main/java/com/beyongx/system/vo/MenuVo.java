@@ -1,5 +1,6 @@
 package com.beyongx.system.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.beyongx.common.vo.Node;
@@ -7,7 +8,8 @@ import com.beyongx.common.vo.Node;
 import lombok.Data;
 
 @Data
-public class MenuVo extends Node {
+public class MenuVo extends Node implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     /**
      * 标题

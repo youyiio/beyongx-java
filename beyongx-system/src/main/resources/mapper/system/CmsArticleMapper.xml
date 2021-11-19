@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyongx.system.mapper.CmsArticleMapper">
 
+    <select id="selectCategorysById" resultType="com.beyongx.system.entity.CmsCategory">
+        select c.* from cms_category as c, cms_category_article as ca where c.id = ca.category_id and ca.article_id = #{id}
+    </select>
 </mapper>
