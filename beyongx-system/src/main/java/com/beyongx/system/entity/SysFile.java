@@ -24,12 +24,12 @@ public class SysFile implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String urlPath;
+    private String fileUrl;
 
     /**
      * file_ulr所在目录
      */
-    private String path;
+    private String filePath;
 
     private String name;
 
