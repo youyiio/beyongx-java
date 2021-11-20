@@ -74,6 +74,7 @@ spring:
     password:
     database: 0
     timeout: 0
+    expire: 3600
     jedis:
       pool:
         max-active: 8

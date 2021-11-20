@@ -12,6 +12,7 @@ import com.beyongx.common.utils.FileUtils;
 import com.beyongx.common.utils.IpUtils;
 import com.beyongx.framework.service.IServerService;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class ServerServiceImpl implements IServerService {
     private final DecimalFormat df = new DecimalFormat("0.00");
     
     @Override
+    @Cacheable(cacheNames="server")
     public Map<String, Object> getStatus() {
         Map<String, Object> resultMap = new LinkedHashMap<>(8);
         try {

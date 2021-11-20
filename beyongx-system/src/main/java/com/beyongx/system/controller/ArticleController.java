@@ -68,8 +68,6 @@ public class ArticleController {
         queryWrapper.select(CmsArticle.class, entity -> !entity.getColumn().equals("content"));
         
         Map<String, Object> filters = pageVo.getFilters();
-        Map<String, String> orders = pageVo.getOrders();
-
         if (filters.containsKey("status")) {
             queryWrapper.eq("status", filters.get("status"));
         } else {
@@ -77,6 +75,7 @@ public class ArticleController {
         }
 
         //排序
+        Map<String, String> orders = pageVo.getOrders();
         if (orders.size() == 0) {
             queryWrapper.orderByDesc("sort").orderByDesc("post_time");
         } else {

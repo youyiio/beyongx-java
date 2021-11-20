@@ -1,6 +1,5 @@
 package com.beyongx.framework.service;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.beyongx.framework.shiro.JwtPermission;

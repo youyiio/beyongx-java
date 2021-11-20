@@ -18,6 +18,8 @@ public class JwtRole implements Serializable {
     
     List<JwtPermission> permissionList;
 
+    public JwtRole() {}
+    
     public JwtRole(Integer roleId, String roleName, List<JwtPermission> permissionList) {
         this.roleId = roleId;
         this.roleName = roleName;

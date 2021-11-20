@@ -1,5 +1,7 @@
 package com.beyongx.system.controller;
 
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,6 +33,18 @@ public class ActionLogController {
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Result list(@Validated @RequestBody PageVo pageVo) {
         QueryWrapper<SysActionLog> queryWrapper = new QueryWrapper<>();
+        
+        //排序
+        Map<String, String> orders = pageVo.getOrders();
+        if (orders.size() == 0) {
+            queryWrapper.orderByDesc("id");
+        } else {
+            for (String key : orders.keySet()) {
+                String val = orders.get(key);
+                Boolean isAsc = val.equalsIgnoreCase("asc");
+                queryWrapper.orderBy(true, isAsc, key);
+            }            
+        }
         
         IPage<SysActionLog> page = new Page<>(pageVo.getPage(), pageVo.getSize());
         

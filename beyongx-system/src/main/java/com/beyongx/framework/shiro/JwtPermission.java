@@ -17,6 +17,8 @@ public class JwtPermission implements Serializable {
 
     private String path; //权限路径
 
+    public JwtPermission() {}
+    
     public JwtPermission(Integer id, String name, String path) {
         this.id = id;
         this.name = name;
