@@ -2,14 +2,19 @@ package com.beyongx.system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.vo.Result;
+import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.SysConfig;
 import com.beyongx.system.service.ISysConfigService;
 import com.beyongx.system.vo.ConfigVo;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +44,17 @@ public class ConfigController {
 
     @RequiresPermissions("config:list")
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
-    public Result list() {
-        return Result.success(null);
+    public Result list(@Validated @RequestBody PageVo pageVo) {
+        QueryWrapper<SysConfig> queryWrapper = new QueryWrapper<>();
+        
+        IPage<SysConfig> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        
+        IPage<SysConfig> pageList = configService.page(page, queryWrapper);
+        if (CollectionUtils.isEmpty(pageList.getRecords())) {
+            return Result.success(pageList);
+        }
+
+        return Result.success(pageList);
     }
 
     @RequiresPermissions("config:query")
@@ -49,7 +63,7 @@ public class ConfigController {
         return Result.success(null);
     }
 
-    @RequiresPermissions("config:list")
+    @RequiresPermissions("config:create")
     @PostMapping("/create")
     public Result create() {
         return Result.success(null);
@@ -61,7 +75,7 @@ public class ConfigController {
         return Result.success(null);
     }
 
-    @RequiresPermissions("config:list")
+    @RequiresPermissions("config:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
         return Result.success(null);

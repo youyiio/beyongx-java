@@ -137,7 +137,7 @@ public class ArticleController {
         return Result.success(articleVo);
     }
 
-    @RequiresPermissions("article:list")
+    @RequiresPermissions("article:create")
     @PostMapping("/create")
     public Result create(@Validated({Always.class, ArticleVo.Create.class}) @RequestBody ArticleVo articleVo) {
         JwtUser jwtUser = JwtUtils.getUser();
@@ -163,7 +163,7 @@ public class ArticleController {
         return Result.success(resultVo);
     }
 
-    @RequiresPermissions("article:list")
+    @RequiresPermissions("article:delete")
     @DeleteMapping("/delete")
     public Result delete(@RequestBody BatchIdVo batchIdVo) {
         List<Integer> ids = new ArrayList<>();        

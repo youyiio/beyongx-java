@@ -1,14 +1,12 @@
 package com.beyongx.system.controller;
 
-
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
-import com.beyongx.system.entity.SysUser;
-import com.beyongx.system.service.ISysUserService;
+import com.beyongx.system.entity.CmsAd;
+import com.beyongx.system.service.ICmsAdService;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,30 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <p>
- * 用户类 前端控制器
- * </p>
- *
- * @author youyi.io
- * @since 2021-07-01
- */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/ad")
 @Slf4j
-public class UserController {
-    
+public class AdController {
     @Autowired
-    private ISysUserService userService;
+    private ICmsAdService adService;
     
-    @RequiresPermissions("user:list")
+    @RequiresPermissions("ad:list")
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Result list(@Validated @RequestBody PageVo pageVo) {
-        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<CmsAd> queryWrapper = new QueryWrapper<>();
         
-        IPage<SysUser> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        IPage<CmsAd> page = new Page<>(pageVo.getPage(), pageVo.getSize());
         
-        IPage<SysUser> pageList = userService.page(page, queryWrapper);
+        IPage<CmsAd> pageList = adService.page(page, queryWrapper);
         if (CollectionUtils.isEmpty(pageList.getRecords())) {
             return Result.success(pageList);
         }
@@ -56,25 +45,25 @@ public class UserController {
         return Result.success(pageList);
     }
 
-    @RequiresPermissions("user:query")
+    @RequiresPermissions("ad:query")
     @GetMapping("/{id}")
     public Result query(@PathVariable(value="id") Integer id) {
         return Result.success(null);
     }
 
-    @RequiresPermissions("user:create")
+    @RequiresPermissions("ad:create")
     @PostMapping("/create")
     public Result create() {
         return Result.success(null);
     }
 
-    @RequiresPermissions("user:edit")
+    @RequiresPermissions("ad:edit")
     @PostMapping("/edit")
     public Result edit() {
         return Result.success(null);
     }
 
-    @RequiresPermissions("user:delete")
+    @RequiresPermissions("ad:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
         return Result.success(null);
