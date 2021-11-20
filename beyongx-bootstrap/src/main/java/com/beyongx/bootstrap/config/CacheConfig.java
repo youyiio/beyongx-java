@@ -1,5 +1,6 @@
 package com.beyongx.bootstrap.config;
 
+import java.lang.reflect.Method;
 import java.time.Duration;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -9,8 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +29,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-public class CacheConfig {
+public class CacheConfig extends CachingConfigurerSupport {
     
     @Value("${spring.redis.expire}")
     private int expire;
@@ -35,9 +39,13 @@ public class CacheConfig {
         String EHCACHE_CACHE_MANAGER = "ehCacheManager";
     }
 
+    @Autowired
+    private RedisConnectionFactory factory;
+
     @Bean(name = CacheManagerNames.REDIS_CACHE_MANAGER)
     @Primary
-    public CacheManager cacheManager(RedisConnectionFactory factory) {    
+    @Override
+    public CacheManager cacheManager() {    
 
         RedisSerializer<String> redisSerializer = new StringRedisSerializer();
         // 配置序列化（解决乱码的问题）
@@ -61,6 +69,57 @@ public class CacheConfig {
     //     ehCacheManager.afterPropertiesSet();
     //     return ehCacheManager;
     // }
+
+    @Bean
+    @Override
+    public KeyGenerator keyGenerator() {
+        return new KeyGenerator() {
+                @Override
+                public Object generate(Object target, Method method, Object... params) {
+                    StringBuilder sb = new StringBuilder();
+                    //sb.append(target.getClass().getName());
+                    sb.append(method.getName());
+                    sb.append("-");
+                    if (params.length > 0) {
+                        // 参数值
+                        for (Object object : params) {
+                            if (isBaseType(object.getClass())) {
+                                sb.append(object);
+                            } else {
+                                sb.append(object.hashCode());
+                            }
+                            sb.append("_");
+                        }
+
+                        sb.substring(0, sb.length() - 2);
+                    } else {
+                        sb.append("void");
+                    }
+
+                    return sb.toString();
+                }
+
+                /**
+                * 判断object是否为基本类型
+                * @param object
+                * @return
+                */
+                public boolean isBaseType(Object object) {
+                    Class className = object.getClass();
+                    if (className.equals(java.lang.Integer.class) ||
+                        className.equals(java.lang.Byte.class) ||
+                        className.equals(java.lang.Long.class) ||
+                        className.equals(java.lang.Double.class) ||
+                        className.equals(java.lang.Float.class) ||
+                        className.equals(java.lang.Character.class) ||
+                        className.equals(java.lang.Short.class) ||
+                        className.equals(java.lang.Boolean.class)) {
+                        return true;
+                    }
+                    return false;
+                }
+        };
+    }
 
     private RedisSerializer<Object> createJackson2JsonRedisSerializer() {
 

@@ -2,6 +2,8 @@ package com.beyongx.system.controller;
 
 
 
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,7 +47,29 @@ public class UserController {
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Result list(@Validated @RequestBody PageVo pageVo) {
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-        
+        //排除content字段
+        queryWrapper.select(SysUser.class, entity -> !entity.getColumn().equals("password"));
+
+        //过滤条件
+        Map<String, Object> filters = pageVo.getFilters();
+        if (filters.containsKey("status")) {
+            queryWrapper.eq("status", filters.get("status"));
+        } else {
+            queryWrapper.ne("status", -1);
+        }
+
+        //排序
+        Map<String, String> orders = pageVo.getOrders();
+        if (orders.size() == 0) {
+            queryWrapper.orderByDesc("id");
+        } else {
+            for (String key : orders.keySet()) {
+                String val = orders.get(key);
+                Boolean isAsc = val.equalsIgnoreCase("asc");
+                queryWrapper.orderBy(true, isAsc, key);
+            }            
+        }
+
         IPage<SysUser> page = new Page<>(pageVo.getPage(), pageVo.getSize());
         
         IPage<SysUser> pageList = userService.page(page, queryWrapper);

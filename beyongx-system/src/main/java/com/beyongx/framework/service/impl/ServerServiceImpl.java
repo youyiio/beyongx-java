@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.beyongx.common.utils.DateTimeUtils;
 import com.beyongx.common.utils.FileUtils;
 import com.beyongx.common.utils.IpUtils;
 import com.beyongx.framework.service.IServerService;
@@ -43,37 +42,18 @@ public class ServerServiceImpl implements IServerService {
 
     private final DecimalFormat df = new DecimalFormat("0.00");
     
-    @Override
-    @Cacheable(cacheNames="server")
-    public Map<String, Object> getStatus() {
-        Map<String, Object> resultMap = new LinkedHashMap<>(8);
-        try {
-            SystemInfo si = new SystemInfo();
-            OperatingSystem os = si.getOperatingSystem();
-            HardwareAbstractionLayer hal = si.getHardware();
-            // 系统信息
-            resultMap.put("sys", getSystemInfo(os));
-            // cpu 信息
-            resultMap.put("cpu", getCpuInfo(hal.getProcessor()));
-            // 内存信息
-            resultMap.put("memory", getMemoryInfo(hal.getMemory()));
-            // 交换区信息
-            resultMap.put("swap", getSwapInfo(hal.getMemory()));
-            // 磁盘
-            resultMap.put("disk", getDiskInfo(os));
-            resultMap.put("time", DateTimeUtils.getFormatString(new Date(), "HH:mm:ss"));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
-        return resultMap;
-    }
+    private SystemInfo si = new SystemInfo();
     
-        /**
+    /**
      * 获取磁盘信息
      * @return /
      */
-    private Map<String,Object> getDiskInfo(OperatingSystem os) {
+    @Override
+    @Cacheable(cacheNames="server")
+    public Map<String,Object> getDiskInfo() {
+        
+        OperatingSystem os = si.getOperatingSystem();
+
         Map<String,Object> diskInfo = new LinkedHashMap<>();
         FileSystem fileSystem = os.getFileSystem();
         List<OSFileStore> fsArray = fileSystem.getFileStores();
@@ -107,7 +87,12 @@ public class ServerServiceImpl implements IServerService {
      * @param memory /
      * @return /
      */
-    private Map<String,Object> getSwapInfo(GlobalMemory memory) {
+    @Override
+    @Cacheable(cacheNames="server")
+    public Map<String,Object> getSwapInfo() {
+        HardwareAbstractionLayer hal = si.getHardware();
+        GlobalMemory memory = hal.getMemory();
+
         Map<String,Object> swapInfo = new LinkedHashMap<>();
         VirtualMemory virtualMemory = memory.getVirtualMemory();
         long total = virtualMemory.getSwapTotal();
@@ -128,7 +113,11 @@ public class ServerServiceImpl implements IServerService {
      * @param memory /
      * @return /
      */
-    private Map<String,Object> getMemoryInfo(GlobalMemory memory) {
+    @Override
+    public Map<String,Object> getMemoryInfo() {
+        HardwareAbstractionLayer hal = si.getHardware();
+        GlobalMemory memory = hal.getMemory();
+
         Map<String,Object> memoryInfo = new LinkedHashMap<>();
         memoryInfo.put("total", FormatUtil.formatBytes(memory.getTotal()));
         memoryInfo.put("available", FormatUtil.formatBytes(memory.getAvailable()));
@@ -142,7 +131,11 @@ public class ServerServiceImpl implements IServerService {
      * @param processor /
      * @return /
      */
-    private Map<String,Object> getCpuInfo(CentralProcessor processor) {
+    @Override
+    public Map<String,Object> getCpuInfo() {
+        HardwareAbstractionLayer hal = si.getHardware();
+        CentralProcessor processor = hal.getProcessor();
+
         Map<String,Object> cpuInfo = new LinkedHashMap<>();
         cpuInfo.put("name", processor.getProcessorIdentifier().getName());
         cpuInfo.put("package", processor.getPhysicalPackageCount() + "个物理CPU");
@@ -175,13 +168,16 @@ public class ServerServiceImpl implements IServerService {
      * @param os /
      * @return /
      */
-    private Map<String,Object> getSystemInfo(OperatingSystem os){
+    @Override
+    public Map<String,Object> getSystemInfo() {
+        OperatingSystem os = si.getOperatingSystem();
+
         Map<String,Object> systemInfo = new LinkedHashMap<>();
         // jvm 运行时间
         long time = ManagementFactory.getRuntimeMXBean().getStartTime();
         Date date = new Date(time);
         // 计算项目运行时间
-        String formatBetween = df.format((new Date().getTime() - date.getTime()) / 60 * 60 * 1000);
+        String formatBetween = df.format((new Date().getTime() - date.getTime()) / 24 * 60 * 60 * 1000);
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);

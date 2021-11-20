@@ -67,6 +67,7 @@ public class ArticleController {
         //排除content字段
         queryWrapper.select(CmsArticle.class, entity -> !entity.getColumn().equals("content"));
         
+        //过滤条件
         Map<String, Object> filters = pageVo.getFilters();
         if (filters.containsKey("status")) {
             queryWrapper.eq("status", filters.get("status"));
