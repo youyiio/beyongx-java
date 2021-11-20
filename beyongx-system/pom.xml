@@ -25,6 +25,13 @@
             <artifactId>beyongx-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- 获取操作系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>5.8.3</version>
+        </dependency>
     </dependencies>
 
 </project>
