@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtUserService implements IJwtUserService {
+public class JwtUserServiceImpl implements IJwtUserService {
 
     @Autowired
     @Lazy

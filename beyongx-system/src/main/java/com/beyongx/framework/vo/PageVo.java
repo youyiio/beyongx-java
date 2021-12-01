@@ -14,12 +14,12 @@ public class PageVo {
     //页码
     @Digits(message = "页码为数字格式", integer = 6, fraction = 0)
     @Min(message = "页码必须大于0", value = 1)
-    private Integer page;
+    private Integer page = 1;
 
     //每页数量
     @Digits(message = "每页数量为数字格式", integer = 6, fraction = 0)
     @Min(message = "每页数量必须大于0", value = 1)
-    private Integer size;
+    private Integer size = 20;
 
     //分页的参数或过滤参数,内部参数皆可选
     private Map<String, Object> filters = new HashMap<>();

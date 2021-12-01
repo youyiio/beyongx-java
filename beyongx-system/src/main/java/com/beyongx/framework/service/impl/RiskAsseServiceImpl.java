@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RiskAsseService implements IRiskAsseService {
+public class RiskAsseServiceImpl implements IRiskAsseService {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;

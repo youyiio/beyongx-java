@@ -1,12 +1,16 @@
 package com.beyongx.system.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.vo.Result;
+import com.beyongx.framework.entity.Table;
+import com.beyongx.framework.service.IDbService;
 import com.beyongx.framework.vo.PageVo;
-import com.beyongx.system.entity.SysDept;
-import com.beyongx.system.service.ISysDeptService;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,20 +29,38 @@ import lombok.extern.slf4j.Slf4j;
 public class DatabaseController {
     
     @Autowired
-    private ISysDeptService deptService;
+    private IDbService dbService;
 
-    @RequiresPermissions("db:list")
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
-    public Result list(@Validated @RequestBody PageVo pageVo) {
-        QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
+    @RequiresPermissions("database:tables")
+    @RequestMapping(value="/tables", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result listTables(@Validated @RequestBody PageVo pageVo) {
+        QueryWrapper<Table> queryWrapper = new QueryWrapper<>();
         
-        IPage<SysDept> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        //条件过滤
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
+        String database = (String)filters.get("database");
+
+        IPage<Table> page = new Page<>(pageVo.getPage(), pageVo.getSize());
         
-        IPage<SysDept> pageList = deptService.page(page, queryWrapper);
+        IPage<Table> pageList = dbService.listTables(page, database);
         if (CollectionUtils.isEmpty(pageList.getRecords())) {
             return Result.success(pageList);
         }
 
         return Result.success(pageList);
     }
+
+    @RequiresPermissions("database:databases")
+    @RequestMapping(value="/databases", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result listDatabases(@Validated @RequestBody PageVo pageVo) {
+        // QueryWrapper<Table> queryWrapper = new QueryWrapper<>();
+        
+        // IPage<Table> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        
+        List<Map<String, Object>> list = dbService.listDatabases();
+
+        return Result.success(list);
+    }
+
 }

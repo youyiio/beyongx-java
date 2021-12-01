@@ -15,7 +15,7 @@
 
     <!-- 按照每天生成日志文件 -->
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-    <property name="LOG_HOME" value="F:/projects/vscodejava/sms/logs"/>
+    <property name="LOG_HOME" value="F:/projects/vscodejava/beyongx-java/logs"/>
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
