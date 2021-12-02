@@ -18,7 +18,7 @@
         <module>beyongx-system</module>
         <module>beyongx-common</module>
 		<!-- 项目扩展模块（特定项目功能）
-		<module>airsafety-sms</module>
+		<module>beyongx-featuremodule</module>
 		-->
 	</modules>
 

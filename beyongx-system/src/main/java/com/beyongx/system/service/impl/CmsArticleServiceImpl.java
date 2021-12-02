@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -239,6 +240,11 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
     @Override
     public List<CmsCategory> listCategorys(Integer aid) {
         return baseMapper.selectCategorysById(aid);
+    }
+
+    @Override
+    public IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId) {
+        return baseMapper.selectByCategoryId(page, categoryId);
     }
 
 }

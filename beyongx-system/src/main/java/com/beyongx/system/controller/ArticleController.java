@@ -67,12 +67,32 @@ public class ArticleController {
         //排除content字段
         queryWrapper.select(CmsArticle.class, entity -> !entity.getColumn().equals("content"));
         
-        //过滤条件
-        Map<String, Object> filters = pageVo.getFilters();
+        //条件过滤
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
+        
+        if (filters.containsKey("keyword")) {
+            String keyword = (String)filters.remove("keyword");
+            queryWrapper.like("title", keyword);
+        }
+        
         if (filters.containsKey("status")) {
-            queryWrapper.eq("status", filters.get("status"));
+            queryWrapper.eq("status", filters.remove("status"));
         } else {
             queryWrapper.ne("status", ArticleMeta.Status.DELETED.getCode());
+        }
+
+        if (filters.containsKey("startTime")) {
+            String startTime = (String)filters.remove("startTime");
+            queryWrapper.ge("create_time", startTime);
+        }
+        if (filters.containsKey("endTime")) {
+            String endTime = (String)filters.remove("endTime");
+            queryWrapper.lt("create_time", endTime);
+        }
+        //其他条件
+        for (String key : filters.keySet()) {
+            queryWrapper.eq(key, filters.get(key));
         }
 
         //排序
@@ -88,11 +108,21 @@ public class ArticleController {
         }
 
         IPage<CmsArticle> page = new Page<>(pageVo.getPage(), pageVo.getSize());
-        
-        IPage<CmsArticle> pageList = articleService.page(page, queryWrapper);
-        if (CollectionUtils.isEmpty(pageList.getRecords())) {
-            return Result.success(pageList);
+        IPage<CmsArticle> pageList = new Page<>(pageVo.getPage(), pageVo.getSize());
+        if (pageVo.getFilters().containsKey("categoryId")) {
+            queryWrapper.eq("category_id", filters.get("categoryId"));
+
+            pageList = articleService.listByCategoryId(page, (Integer)filters.get("categoryId"));
+            if (CollectionUtils.isEmpty(pageList.getRecords())) {
+                return Result.success(pageList);
+            }
+        } else {
+            pageList = articleService.page(page, queryWrapper);
+            if (CollectionUtils.isEmpty(pageList.getRecords())) {
+                return Result.success(pageList);
+            }
         }
+        
 
         IPage<Map<String, Object>> resultList = new Page<>(pageVo.getPage(), pageVo.getSize());
         List<Map<String, Object>> mapList = new ArrayList<>(pageVo.getSize());

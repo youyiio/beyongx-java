@@ -6,6 +6,8 @@ import com.beyongx.system.vo.ArticleVo;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -35,4 +37,6 @@ public interface ICmsArticleService extends IService<CmsArticle> {
     List<CmsCategory> listCategorys(Integer aid);
 
     /** 关联表 end */
+
+    IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId);
 }
