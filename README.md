@@ -1,6 +1,6 @@
-# Beyongx Framework 开发框架
+# Beyongx-java 开发框架
 
-Beyongx 基于Springboot 2.5、mybatis-plus、Jwt、apache shiro的后台前后端分离管理系统
+Beyongx-java 基于Springboot 2.5、mybatis-plus、Jwt、apache shiro的后台前后端分离管理系统
 
 ## 项目介绍
 Beyongx 基于Springboot 2.5、mybatis-plus、Jwt、apache shiro的后台前后端分离管理系统
