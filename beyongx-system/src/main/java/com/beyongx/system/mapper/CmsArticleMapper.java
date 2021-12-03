@@ -4,8 +4,8 @@ import com.beyongx.system.entity.CmsArticle;
 import com.beyongx.system.entity.CmsCategory;
 
 import java.util.List;
+import java.util.Map;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
@@ -25,5 +25,5 @@ public interface CmsArticleMapper extends BaseMapper<CmsArticle> {
 
     /** 关联表定义 end */
 
-    IPage<CmsArticle> selectByCategoryId(IPage<CmsArticle> page, Integer categoryId);
+    IPage<CmsArticle> selectByCategoryId(IPage<CmsArticle> page, Integer categoryId, Map<String, Object> params);
 }

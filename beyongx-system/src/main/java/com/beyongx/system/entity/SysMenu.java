@@ -55,9 +55,9 @@ public class SysMenu implements Serializable {
     private String icon;
 
     /**
-     * 类型 0.页面菜单1.动作菜单
+     * 菜单类型 0.网页页面1.菜单组件2.动作组件（捆绑请求）
      */
-    private Boolean type;
+    private Integer type;
 
     /**
      * 是否菜单
@@ -72,7 +72,7 @@ public class SysMenu implements Serializable {
     /**
      * 状态 -1.删除;1.激活;2.暂停;
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 排序

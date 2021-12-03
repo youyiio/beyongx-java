@@ -112,7 +112,8 @@ public class ArticleController {
         if (pageVo.getFilters().containsKey("categoryId")) {
             queryWrapper.eq("category_id", filters.get("categoryId"));
 
-            pageList = articleService.listByCategoryId(page, (Integer)filters.get("categoryId"));
+            Map<String, Object> params = pageVo.getFilters();
+            pageList = articleService.listByCategoryId(page, (Integer)filters.get("categoryId"), params);
             if (CollectionUtils.isEmpty(pageList.getRecords())) {
                 return Result.success(pageList);
             }

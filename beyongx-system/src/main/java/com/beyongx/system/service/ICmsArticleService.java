@@ -5,6 +5,7 @@ import com.beyongx.system.entity.CmsCategory;
 import com.beyongx.system.vo.ArticleVo;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,5 +39,5 @@ public interface ICmsArticleService extends IService<CmsArticle> {
 
     /** 关联表 end */
 
-    IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId);
+    IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId, Map<String, Object> params);
 }

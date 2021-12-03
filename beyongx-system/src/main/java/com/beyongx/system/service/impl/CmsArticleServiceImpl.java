@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -56,7 +57,7 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
     @Cacheable(key = "#id",unless = "#result.status==-1")
     public ArticleVo getArticle(Integer id) {        
         CmsArticle article = baseMapper.selectById(id);
-        if (article == null) {
+        if (article == null || article.getStatus() == ArticleMeta.Status.DELETED.getCode()) {
             log.warn("文章id不存在!");
             throw new ServiceException(Result.Code.E_DATA_NOT_FOUND, "文章id不存在!");
         }
@@ -243,8 +244,8 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
     }
 
     @Override
-    public IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId) {
-        return baseMapper.selectByCategoryId(page, categoryId);
+    public IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId, Map<String, Object> params) {
+        return baseMapper.selectByCategoryId(page, categoryId, params);
     }
 
 }

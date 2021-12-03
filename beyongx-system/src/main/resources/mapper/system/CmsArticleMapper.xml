@@ -10,10 +10,22 @@
     <!-- 关联表定义 end -->
 
     <select id="selectByCategoryId" resultType="com.beyongx.system.entity.CmsArticle">
-        select ca.*, ca.category_id from cms_article as a, cms_category_article as ca 
-        where a.id = ca.article_id and
+        select * from cms_article as a, cms_category_article as ca 
+        where a.id = ca.article_id 
         <if test="categoryId != null">
-            ca.category_id = #{categoryId}
+            and ca.category_id = #{categoryId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+        <if test="params.startTime != null">
+            and a.create_time >= #{params.startTime}
+        </if>
+        <if test="params.endTime != null">
+            and a.create_time <![CDATA[ <]]> #{params.endTime}
+        </if>
+        <if test="params.keyword">
+            and a.title like "%${params.keyword}%"
         </if>
     </select>
 </mapper>
