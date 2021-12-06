@@ -18,9 +18,11 @@ import com.beyongx.framework.vo.BatchIdVo;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.CmsArticle;
 import com.beyongx.system.entity.CmsCategory;
+import com.beyongx.system.entity.CmsComment;
 import com.beyongx.system.entity.SysFile;
 import com.beyongx.system.entity.meta.ArticleMeta;
 import com.beyongx.system.service.ICmsArticleService;
+import com.beyongx.system.service.ICmsCommentService;
 import com.beyongx.system.service.ISysFileService;
 import com.beyongx.system.vo.ArticleVo;
 import com.beyongx.system.vo.AuditBatchIdVo;
@@ -59,6 +61,8 @@ public class ArticleController {
     private ICmsArticleService articleService;
     @Autowired
     private ISysFileService fileService;
+    @Autowired
+    private ICmsCommentService commentService;
 
     @RequiresPermissions("article:list")
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
@@ -143,10 +147,13 @@ public class ArticleController {
             SysFile thumbImage = fileService.getById(thumbImageId);
             vo.put("thumbImage", thumbImage);
 
-            List<SysFile> metaImages = new ArrayList<>();
+            List<String> tags = articleService.listTags(record.getId());
+            vo.put("tags", tags);
+
+            List<SysFile> metaImages = articleService.listImages(record.getId());
             vo.put("metaImages", metaImages);
 
-            List<SysFile> metaFiles = new ArrayList<>();
+            List<SysFile> metaFiles = articleService.listFiles(record.getId());
             vo.put("metaFiles", metaFiles);
 
             mapList.add(vo);
@@ -164,6 +171,9 @@ public class ArticleController {
     public Result query(@PathVariable(value="id") Integer id) {
 
         ArticleVo articleVo = articleService.getArticle(id);
+        if (articleVo == null || articleVo.getStatus() == ArticleMeta.Status.DELETED.getCode()) {
+            return Result.error(Result.Code.E_DATA_NOT_FOUND, "文章不存在!");
+        }
         
         return Result.success(articleVo);
     }
@@ -283,6 +293,33 @@ public class ArticleController {
             return Result.success(data);
         }
 
+    }
 
+    @RequiresPermissions("article:commentList")
+    @RequestMapping(value="/comments/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result list(@PathVariable(value="id") Integer id, @Validated @RequestBody PageVo pageVo) {
+        QueryWrapper<CmsComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("article_id", id);
+
+        //排序
+        Map<String, String> orders = pageVo.getOrders();
+        if (orders.size() == 0) {
+            queryWrapper.orderByDesc("id");
+        } else {
+            for (String key : orders.keySet()) {
+                String val = orders.get(key);
+                Boolean isAsc = val.equalsIgnoreCase("asc");
+                queryWrapper.orderBy(true, isAsc, key);
+            }            
+        }
+
+        IPage<CmsComment> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        
+        IPage<CmsComment> pageList = commentService.page(page, queryWrapper);
+        if (CollectionUtils.isEmpty(pageList.getRecords())) {
+            return Result.success(pageList);
+        }
+
+        return Result.success(pageList);
     }
 }

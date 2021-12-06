@@ -24,7 +24,7 @@ public class CmsArticleMeta implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer targetId;
+    private Integer articleId;
 
     private String metaKey;
 

@@ -2,6 +2,7 @@ package com.beyongx.system.service;
 
 import com.beyongx.system.entity.CmsArticle;
 import com.beyongx.system.entity.CmsCategory;
+import com.beyongx.system.entity.SysFile;
 import com.beyongx.system.vo.ArticleVo;
 
 import java.util.List;
@@ -37,7 +38,13 @@ public interface ICmsArticleService extends IService<CmsArticle> {
 
     List<CmsCategory> listCategorys(Integer aid);
 
+    List<SysFile> listImages(Integer aid);
+
+    List<SysFile> listFiles(Integer aid);
+    
     /** 关联表 end */
 
+    List<String> listTags(Integer aid);
+    
     IPage<CmsArticle> listByCategoryId(IPage<CmsArticle> page, Integer categoryId, Map<String, Object> params);
 }

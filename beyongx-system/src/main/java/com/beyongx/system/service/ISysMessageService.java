@@ -13,4 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysMessageService extends IService<SysMessage> {
 
+    SysMessage sendMessage(String from, String to, String title, String content, String type);
+
+    boolean setReaded(Integer id);
+
+    boolean setAllReaded(String type);
 }

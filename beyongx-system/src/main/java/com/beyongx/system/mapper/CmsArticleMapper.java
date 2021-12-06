@@ -26,4 +26,8 @@ public interface CmsArticleMapper extends BaseMapper<CmsArticle> {
     /** 关联表定义 end */
 
     IPage<CmsArticle> selectByCategoryId(IPage<CmsArticle> page, Integer categoryId, Map<String, Object> params);
+
+    Integer incCommentCount(Integer id);
+
+    Integer incReadCount(Integer id);
 }

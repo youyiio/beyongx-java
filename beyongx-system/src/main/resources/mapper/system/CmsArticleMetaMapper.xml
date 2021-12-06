@@ -2,4 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyongx.system.mapper.CmsArticleMetaMapper">
 
+    <select id="selectByMetaKey" resultType="com.beyongx.system.entity.CmsArticleMeta">
+        select * from cms_article_meta where article_id = #{articleId} and meta_key = #{metaKey}
+    </select>
+
+    <select id="selectOneByMetaKey" resultType="com.beyongx.system.entity.CmsArticleMeta">
+        select * from cms_article_meta where article_id = #{articleId} and meta_key = #{metaKey} limit 1
+    </select>
+
 </mapper>

@@ -3,11 +3,15 @@ package com.beyongx.system.service.impl;
 import com.beyongx.common.exception.ServiceException;
 import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.CmsArticle;
+import com.beyongx.system.entity.CmsArticleMeta;
 import com.beyongx.system.entity.CmsCategory;
+import com.beyongx.system.entity.CmsCategoryArticle;
 import com.beyongx.system.entity.SysConfig;
 import com.beyongx.system.entity.SysFile;
 import com.beyongx.system.entity.meta.ArticleMeta;
 import com.beyongx.system.mapper.CmsArticleMapper;
+import com.beyongx.system.mapper.CmsArticleMetaMapper;
+import com.beyongx.system.mapper.CmsCategoryArticleMapper;
 import com.beyongx.system.mapper.SysFileMapper;
 import com.beyongx.system.service.ICmsArticleService;
 import com.beyongx.system.service.ISysConfigService;
@@ -19,12 +23,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -49,7 +55,10 @@ import lombok.extern.slf4j.Slf4j;
 public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArticle> implements ICmsArticleService {
     @Autowired
     private SysFileMapper fileMapper;
-
+    @Autowired
+    private CmsArticleMetaMapper articleMetaMapper;
+    @Autowired
+    private CmsCategoryArticleMapper categoryArticleMapper;
     @Autowired
     private ISysConfigService configService;
 
@@ -76,10 +85,13 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
         SysFile thumbImage = fileMapper.selectById(thumbImageId);
         articleVo.setThumbImage(thumbImage);
 
-        List<SysFile> metaImages = new ArrayList<>();
+        List<String> tags = this.listTags(article.getId());
+        articleVo.setTags(tags);
+
+        List<SysFile> metaImages = this.listImages(article.getId());
         articleVo.setMetaImages(metaImages);
 
-        List<SysFile> metaFiles = new ArrayList<>();
+        List<SysFile> metaFiles = this.listFiles(article.getId());
         articleVo.setMetaFiles(metaFiles);
 
         return articleVo;
@@ -109,13 +121,65 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
 
         boolean success = this.save(article);
         if (!success) {
-            log.warn("新增文章失败");
+            log.warn("新增文章失败!");
             throw new ServiceException(Result.Code.E_UNKNOWN_ERROR, "新增文章失败!");            
         }
 
         //更新category ids
-        //更新meta image ids;
+        List<Integer> categoryIds = articleVo.getCategoryIds();
+        for (Integer categoryId : categoryIds) {
+            CmsCategoryArticle categoryArticle = new CmsCategoryArticle();
+            categoryArticle.setArticleId(article.getId());
+            categoryArticle.setCategoryId(categoryId);
+            categoryArticleMapper.insert(categoryArticle);
+        }
+
+        //更新标签tag
+        List<String> tags = articleVo.getTags();
+        if (CollectionUtils.isNotEmpty(tags)) {
+            Date currentDate = new Date();
+            for (String tag : tags) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.TAG.getKey());
+                articleMeta.setMetaValue(tag);
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
+
+        //更新meta image ids
+        List<Integer> metaImageIds = articleVo.getMetaImageIds();
+        if (CollectionUtils.isNotEmpty(metaImageIds)) {
+            for (Integer imageId : metaImageIds) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                Date currentDate = new Date();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.IMAGE.getKey());
+                articleMeta.setMetaValue(String.valueOf(imageId));
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
         //更新meta file ids;
+        List<Integer> metaFileIds = articleVo.getMetaFileIds();
+        if (CollectionUtils.isNotEmpty(metaFileIds)) {
+            Date currentDate = new Date();
+            for (Integer fileId : metaFileIds) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.FILE.getKey());
+                articleMeta.setMetaValue(String.valueOf(fileId));
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
 
         ArticleVo newArticleVo = this.getArticle(article.getId());
         return newArticleVo;
@@ -140,9 +204,81 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
             throw new ServiceException(Result.Code.E_UNKNOWN_ERROR, "文章更新失败!");
         }
         
-        //更新category ids
-        //更新meta image ids;
-        //更新meta file ids;
+        //更新category ids, 先清理后更新
+        LambdaQueryWrapper<CmsCategoryArticle> caQueryWrapper = new LambdaQueryWrapper<>();
+        caQueryWrapper.eq(CmsCategoryArticle::getArticleId, article.getId());
+        categoryArticleMapper.delete(caQueryWrapper);
+
+        List<Integer> categoryIds = articleVo.getCategoryIds();
+        for (Integer categoryId : categoryIds) {
+            CmsCategoryArticle categoryArticle = new CmsCategoryArticle();
+            categoryArticle.setArticleId(article.getId());
+            categoryArticle.setCategoryId(categoryId);
+            categoryArticleMapper.insert(categoryArticle);
+        }
+
+        //更新标签tag, 先清理后更新
+        LambdaQueryWrapper<CmsArticleMeta> amQueryWrapper = new LambdaQueryWrapper<>();
+        amQueryWrapper.eq(CmsArticleMeta::getArticleId, article.getId());
+        amQueryWrapper.eq(CmsArticleMeta::getMetaKey, ArticleMeta.MetaKey.TAG.getKey());
+        articleMetaMapper.delete(amQueryWrapper);
+
+        List<String> tags = articleVo.getTags();
+        if (CollectionUtils.isNotEmpty(tags)) {
+            Date currentDate = new Date();
+            for (String tag : tags) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.TAG.getKey());
+                articleMeta.setMetaValue(tag);
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
+
+        //更新meta image ids, 先清理后更新
+        amQueryWrapper = new LambdaQueryWrapper<>();
+        amQueryWrapper.eq(CmsArticleMeta::getArticleId, article.getId());
+        amQueryWrapper.eq(CmsArticleMeta::getMetaKey, ArticleMeta.MetaKey.IMAGE.getKey());
+        articleMetaMapper.delete(amQueryWrapper);
+
+        List<Integer> metaImageIds = articleVo.getMetaImageIds();
+        if (CollectionUtils.isNotEmpty(metaImageIds)) {
+            Date currentDate = new Date();
+            for (Integer imageId : metaImageIds) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.IMAGE.getKey());
+                articleMeta.setMetaValue(String.valueOf(imageId));
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
+
+        //更新meta file ids, 先清理后更新
+        amQueryWrapper = new LambdaQueryWrapper<>();
+        amQueryWrapper.eq(CmsArticleMeta::getArticleId, article.getId());
+        amQueryWrapper.eq(CmsArticleMeta::getMetaKey, ArticleMeta.MetaKey.FILE.getKey());
+        articleMetaMapper.delete(amQueryWrapper);
+
+        List<Integer> metaFileIds = articleVo.getMetaFileIds();
+        if (CollectionUtils.isNotEmpty(metaFileIds)) {
+            Date currentDate = new Date();
+            for (Integer fileId : metaFileIds) {
+                CmsArticleMeta articleMeta = new CmsArticleMeta();
+                articleMeta.setArticleId(article.getId());
+                articleMeta.setMetaKey(ArticleMeta.MetaKey.FILE.getKey());
+                articleMeta.setMetaValue(String.valueOf(fileId));
+                articleMeta.setCreateTime(currentDate);
+                articleMeta.setUpdateTime(currentDate);
+
+                articleMetaMapper.insert(articleMeta);
+            }
+        }
 
         ArticleVo newArticleVo = this.getArticle(articleVo.getId());
 
@@ -241,6 +377,71 @@ public class CmsArticleServiceImpl extends ServiceImpl<CmsArticleMapper, CmsArti
     @Override
     public List<CmsCategory> listCategorys(Integer aid) {
         return baseMapper.selectCategorysById(aid);
+    }
+
+    @Override
+    public List<SysFile> listImages(Integer aid) {
+        List<SysFile> fileList = new ArrayList<>();
+
+        List<CmsArticleMeta> articleMetas = articleMetaMapper.selectByMetaKey(aid, ArticleMeta.MetaKey.IMAGE.getKey());
+        if (CollectionUtils.isEmpty(articleMetas)) {
+            return fileList;
+        }
+
+        List<Integer> vals = new ArrayList<>();
+        for (CmsArticleMeta articleMeta : articleMetas) {
+            String metaValue = articleMeta.getMetaValue();
+
+            try {
+                Integer val = Integer.parseInt(metaValue);
+                vals.add(val);
+            } catch(Exception e) {}
+            
+        }
+
+        QueryWrapper<SysFile> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id", vals);
+        fileList = fileMapper.selectList(queryWrapper);
+
+        return fileList;
+    }
+
+    @Override
+    public List<SysFile> listFiles(Integer aid) {
+        List<SysFile> fileList = new ArrayList<>();
+        List<CmsArticleMeta> articleMetas = articleMetaMapper.selectByMetaKey(aid, ArticleMeta.MetaKey.FILE.getKey());
+        if (CollectionUtils.isEmpty(articleMetas)) {
+            return fileList;
+        }
+
+        List<Integer> vals = new ArrayList<>();
+        for (CmsArticleMeta articleMeta : articleMetas) {
+            String metaValue = articleMeta.getMetaValue();
+
+            try {
+                Integer val = Integer.parseInt(metaValue);
+                vals.add(val);
+            } catch(Exception e) {}
+            
+        }
+
+        QueryWrapper<SysFile> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id", vals);
+        fileList = fileMapper.selectList(queryWrapper);
+
+        return fileList;
+    }
+
+    @Override
+    public List<String> listTags(Integer aid) {
+        List<CmsArticleMeta> articleMetas = articleMetaMapper.selectByMetaKey(aid, ArticleMeta.MetaKey.TAG.getKey());
+        List<String> tags = new ArrayList<>();
+        for (CmsArticleMeta articleMeta : articleMetas) {
+            String metaValue = articleMeta.getMetaValue();
+            tags.add(metaValue);            
+        }
+
+        return tags;
     }
 
     @Override

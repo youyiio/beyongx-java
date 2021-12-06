@@ -28,4 +28,12 @@
             and a.title like "%${params.keyword}%"
         </if>
     </select>
+
+    <select id="incCommentCount" resultType="Integer">
+        update cms_article set comment_count = comment_count + 1 where id = #{id}
+    </select>
+
+    <select id="incCommentCount" resultType="Integer">
+        update cms_article set read_count = read_count + 1 where id = #{id}
+    </select>
 </mapper>

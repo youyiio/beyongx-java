@@ -3,7 +3,7 @@ package com.beyongx.system.entity.meta;
 public class ArticleMeta {
     
     public static enum Status {
-        CRAWLED(3), //已入库
+        CRAWLED(-3), //已入库
         WAREHOUSED(-4), //已抓取
 
         DELETED(-1), //删除
@@ -21,6 +21,25 @@ public class ArticleMeta {
 
         public int getCode() {
             return code;
+        }
+    }
+
+    public static enum MetaKey {
+        IMAGE("image"), //图片
+        FILE("file"), //文件
+        TAG("tag"), //标签
+        READ_IP("read_ip"), //阅读ip
+        TIMING_PUBLISH("__timing_post__"), //定时发布
+        BAIDU_INDEX("baidu_index"); //百度索引
+ 
+        private String key;
+
+        private MetaKey(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
         }
     }
 }

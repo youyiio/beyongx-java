@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.CmsComment;
+import com.beyongx.system.vo.CommentVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICmsCommentService extends IService<CmsComment> {
 
+    CmsComment createComment(CommentVo commentVo);
+
+    boolean auditComment(Integer id, String audit);
+
+    boolean removeComment(Integer id);
 }

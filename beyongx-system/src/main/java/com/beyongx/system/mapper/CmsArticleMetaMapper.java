@@ -1,6 +1,9 @@
 package com.beyongx.system.mapper;
 
 import com.beyongx.system.entity.CmsArticleMeta;
+
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CmsArticleMetaMapper extends BaseMapper<CmsArticleMeta> {
 
+    List<CmsArticleMeta> selectByMetaKey(Integer articleId, String metaKey);
+
+    CmsArticleMeta selectOneByMetaKey(Integer articleId, String metaKey);
 }

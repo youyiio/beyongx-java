@@ -63,6 +63,16 @@ public class ArticleVo implements Serializable {
 
     private String relateds;
 
+    @NotEmpty(message = "文章分类不能为空", groups = {Always.class})
+    private List<Integer> categoryIds;
+
+    private List<String> tags;
+    
+    private List<Integer> metaImageIds;
+
+    private List<Integer> metaFileIds;
+
+
     /** 关联表 start */
     private List<CmsCategory> categorys;
 
