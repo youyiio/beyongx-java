@@ -95,9 +95,9 @@ public class ArticleController {
             queryWrapper.lt("create_time", endTime);
         }
         //其他条件
-        for (String key : filters.keySet()) {
-            queryWrapper.eq(key, filters.get(key));
-        }
+        // for (String key : filters.keySet()) {
+        //     queryWrapper.eq(key, filters.get(key));
+        // }
 
         //排序
         Map<String, String> orders = pageVo.getOrders();
@@ -108,7 +108,7 @@ public class ArticleController {
                 String val = orders.get(key);
                 Boolean isAsc = val.equalsIgnoreCase("asc");
                 queryWrapper.orderBy(true, isAsc, key);
-            }            
+            }
         }
 
         IPage<CmsArticle> page = new Page<>(pageVo.getPage(), pageVo.getSize());

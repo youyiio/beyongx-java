@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyongx.system.mapper.CmsAdMapper">
 
+    <select id="selectBySlotId" resultType="com.beyongx.system.entity.CmsAd">
+        select * from cms_ad as a, cms_ad_serving as adserving, cms_ad_slot as adslot
+        where a.id = adserving.ad_id and adserving.slot_id = adslot.id 
+        <if test="slotId != null">
+            and adserving.slot_id = #{slotId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+        <if test="params.startTime != null">
+            and adserving.create_time >= #{params.startTime}
+        </if>
+        <if test="params.endTime != null">
+            and adserving.create_time <![CDATA[ <]]> #{params.endTime}
+        </if>
+        <if test="params.keyword">
+            and a.title like "%${params.keyword}%"
+        </if>
+    </select>
+
 </mapper>

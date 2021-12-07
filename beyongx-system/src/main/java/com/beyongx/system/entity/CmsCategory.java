@@ -24,7 +24,7 @@ public class CmsCategory implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String pid;
+    private Integer pid;
 
     private String title;
 
