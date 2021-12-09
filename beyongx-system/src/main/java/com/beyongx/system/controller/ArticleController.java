@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.shiro.JwtUser;
 import com.beyongx.framework.shiro.JwtUtils;
@@ -180,7 +182,7 @@ public class ArticleController {
 
     @RequiresPermissions("article:create")
     @PostMapping("/create")
-    public Result create(@Validated({Always.class, ArticleVo.Create.class}) @RequestBody ArticleVo articleVo) {
+    public Result create(@Validated({Always.class, Create.class}) @RequestBody ArticleVo articleVo) {
         JwtUser jwtUser = JwtUtils.getUser();
         articleVo.setUid(jwtUser.getUid());
 
@@ -191,7 +193,7 @@ public class ArticleController {
 
     @RequiresPermissions("article:edit")
     @PostMapping("/{id}")
-    public Result edit(@Validated({Always.class, ArticleVo.Edit.class}) @RequestBody ArticleVo articleVo, @PathVariable(value="id") Integer id) {
+    public Result edit(@Validated({Always.class, Edit.class}) @RequestBody ArticleVo articleVo, @PathVariable(value="id") Integer id) {
         if (id != articleVo.getId()) {
             return Result.error(Result.Code.E_DATA_ERROR, "文章id不匹配!");
         }

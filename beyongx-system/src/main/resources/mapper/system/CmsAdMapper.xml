@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beyongx.system.mapper.CmsAdMapper">
 
-    <select id="selectBySlotId" resultType="com.beyongx.system.entity.CmsAd">
-        select * from cms_ad as a, cms_ad_serving as adserving, cms_ad_slot as adslot
+    <select id="selectBySlotId" resultType="com.beyongx.system.vo.AdVo">
+        select distinct a.id,a.title,a.url,a.image_id,a.sort,a.create_time from cms_ad as a, cms_ad_serving as adserving, cms_ad_slot as adslot
         where a.id = adserving.ad_id and adserving.slot_id = adslot.id 
         <if test="slotId != null">
             and adserving.slot_id = #{slotId}
@@ -12,7 +12,7 @@
             and a.status = #{params.status}
         </if>
         <if test="params.startTime != null">
-            and adserving.create_time >= #{params.startTime}
+            and adserving.create_time <![CDATA[ >=]]> #{params.startTime}
         </if>
         <if test="params.endTime != null">
             and adserving.create_time <![CDATA[ <]]> #{params.endTime}
@@ -20,6 +20,7 @@
         <if test="params.keyword">
             and a.title like "%${params.keyword}%"
         </if>
+        order by a.sort desc, a.id desc
     </select>
 
 </mapper>

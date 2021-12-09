@@ -98,8 +98,11 @@ mybatis-plus:
   configuration:
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回类型为Map,对应字段使用驼峰
+    map-underscore-to-camel-case: true
     # 返回类型为Map,显示null对应的字段
     call-setters-on-nulls: true
+    #object-wrapper-factory: com.baomidou.mybatisplus.extension.MybatisMapWrapperFactory
 
 #shiro 配置
 shiro:

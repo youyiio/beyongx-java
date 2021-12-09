@@ -10,6 +10,7 @@ import com.beyongx.system.mapper.CmsAdMapper;
 import com.beyongx.system.mapper.CmsAdServingMapper;
 import com.beyongx.system.mapper.CmsAdSlotMapper;
 import com.beyongx.system.service.ICmsAdService;
+import com.beyongx.system.vo.AdServingVo;
 import com.beyongx.system.vo.AdVo;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +20,9 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.BeanUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,15 +43,31 @@ public class CmsAdServiceImpl extends ServiceImpl<CmsAdMapper, CmsAd> implements
     private CmsAdSlotMapper adSlotMapper;
 
     @Override
-    public IPage<CmsAd> listBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params) {
-        return baseMapper.selectBySlotId(page, slotId, params);
+    public IPage<AdVo> listBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params) {
+        IPage<AdVo> pageList = baseMapper.selectBySlotId(page, slotId, params);
+        for (AdVo adVo : pageList.getRecords()) {    
+            QueryWrapper<CmsAdServing> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("ad_id", adVo.getId());
+            //queryWrapper.eq("status", AdServingMeta.Status.ONLINE.getCode());
+            List<CmsAdServing> servings = adServingMapper.selectList(queryWrapper);    
+            List<Map<String, Object>> servingMaps = BeanUtils.beansToMaps(servings);    
+            List<AdServingVo> servingVos = BeanUtils.mapsToBeans(servingMaps, AdServingVo.class);
+            for (AdServingVo adServingVo : servingVos) {
+                CmsAdSlot slot = adSlotMapper.selectById(adServingVo.getSlotId());
+                adServingVo.setSlot(slot);
+            }
+
+            adVo.setServings(servingVos);
+        }
+
+        return pageList;
     }
 
     @Override
     public AdVo createAd(AdVo adVo) {
         CmsAd ad = new CmsAd();
         try {
-            BeanUtils.copyProperties(ad, adVo);
+            org.apache.commons.beanutils.BeanUtils.copyProperties(ad, adVo);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage(), e);
         }
@@ -71,23 +88,31 @@ public class CmsAdServiceImpl extends ServiceImpl<CmsAdMapper, CmsAd> implements
             adServing.setStatus(AdServingMeta.Status.ONLINE.getCode());
             adServing.setStartTime(null);
             adServing.setEndTime(null);
+            adServing.setUpdateTime(currentTime);
             adServing.setCreateTime(currentTime);
 
             adServingMapper.insert(adServing);
         }
 
         //封装放回数据
-        QueryWrapper<CmsAdSlot> slotWrapper = new QueryWrapper<>();
-        slotWrapper.in("id", slotIds);
-        List<CmsAdSlot> slots = adSlotMapper.selectList(slotWrapper);
 
         try {
-            BeanUtils.copyProperties(adVo, ad);
+            org.apache.commons.beanutils.BeanUtils.copyProperties(adVo, ad);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage(), e);
         }
 
-        adVo.setSlots(slots);
+        QueryWrapper<CmsAdServing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ad_id", adVo.getId());
+        //queryWrapper.eq("status", AdServingMeta.Status.ONLINE.getCode());
+        List<CmsAdServing> servings = adServingMapper.selectList(queryWrapper);    
+        List<Map<String, Object>> servingMaps = BeanUtils.beansToMaps(servings);      
+        List<AdServingVo> servingVos = BeanUtils.mapsToBeans(servingMaps, AdServingVo.class);
+        for (AdServingVo adServingVo : servingVos) {
+            CmsAdSlot slot = adSlotMapper.selectById(adServingVo.getSlotId());
+            adServingVo.setSlot(slot);
+        }
+        adVo.setServings(servingVos);
 
         return adVo;
     }
@@ -96,7 +121,7 @@ public class CmsAdServiceImpl extends ServiceImpl<CmsAdMapper, CmsAd> implements
     public AdVo editAd(AdVo adVo) {
          CmsAd ad = new CmsAd();
         try {
-            BeanUtils.copyProperties(ad, adVo);
+            org.apache.commons.beanutils.BeanUtils.copyProperties(ad, adVo);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage(), e);
         }
@@ -119,25 +144,33 @@ public class CmsAdServiceImpl extends ServiceImpl<CmsAdMapper, CmsAd> implements
             adServing.setSlotId(slotId);
             adServing.setSort(adVo.getSort());
             adServing.setStatus(AdServingMeta.Status.ONLINE.getCode());
-            adServing.setStartTime(adVo.getStartTime());
-            adServing.setEndTime(adVo.getEndTime());
+            adServing.setStartTime(null);
+            adServing.setEndTime(null);
+            adServing.setUpdateTime(currentTime);
             adServing.setCreateTime(currentTime);
 
             adServingMapper.insert(adServing);
         }
         
         //封装放回数据
-        QueryWrapper<CmsAdSlot> slotWrapper = new QueryWrapper<>();
-        slotWrapper.in("id", slotIds);
-        List<CmsAdSlot> slots = adSlotMapper.selectList(slotWrapper);
-
         try {
-            BeanUtils.copyProperties(adVo, ad);
+            org.apache.commons.beanutils.BeanUtils.copyProperties(adVo, ad);
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage(), e);
         }
 
-        adVo.setSlots(slots);
+        QueryWrapper<CmsAdServing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ad_id", adVo.getId());
+        //queryWrapper.eq("status", AdServingMeta.Status.ONLINE.getCode());
+        List<CmsAdServing> servings = adServingMapper.selectList(queryWrapper);    
+        List<Map<String, Object>> servingMaps = BeanUtils.beansToMaps(servings);    
+        List<AdServingVo> servingVos = BeanUtils.mapsToBeans(servingMaps, AdServingVo.class);
+        for (AdServingVo adServingVo : servingVos) {
+            CmsAdSlot slot = adSlotMapper.selectById(adServingVo.getSlotId());
+            adServingVo.setSlot(slot);
+        }
+        adVo.setServings(servingVos);
+
         return adVo;
     }
 
@@ -161,6 +194,20 @@ public class CmsAdServiceImpl extends ServiceImpl<CmsAdMapper, CmsAd> implements
         }
 
         return ad;
+    }
+
+    @Override
+    public boolean removeAd(Integer id) {
+        int rownums = baseMapper.deleteById(id);
+        if (rownums <= 0) {
+            return false;
+        }
+        
+        QueryWrapper<CmsAdServing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ad_id", id);
+        adServingMapper.delete(queryWrapper);        
+
+        return true;
     }
 
 }

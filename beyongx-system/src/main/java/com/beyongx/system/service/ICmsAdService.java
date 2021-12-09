@@ -18,11 +18,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICmsAdService extends IService<CmsAd> {
 
-    IPage<CmsAd> listBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params);
+    IPage<AdVo> listBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params);
 
     AdVo createAd(AdVo adVo);
 
     AdVo editAd(AdVo adVo);
 
     CmsAd setStatus(Integer id, Integer status);
+
+    boolean removeAd(Integer id);
 }

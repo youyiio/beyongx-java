@@ -2,6 +2,9 @@ package com.beyongx.system.controller;
 
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -9,9 +12,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
+import com.beyongx.system.entity.SysDept;
+import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
+import com.beyongx.system.service.ISysDeptService;
+import com.beyongx.system.service.ISysRoleService;
 import com.beyongx.system.service.ISysUserService;
+import com.beyongx.system.vo.UserVo;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +51,11 @@ public class UserController {
     
     @Autowired
     private ISysUserService userService;
-    
+    @Autowired
+    private ISysDeptService deptService;
+    @Autowired
+    private ISysRoleService roleService;
+
     @RequiresPermissions("user:list")
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Result list(@Validated @RequestBody PageVo pageVo) {
@@ -51,11 +64,20 @@ public class UserController {
         queryWrapper.select(SysUser.class, entity -> !entity.getColumn().equals("password"));
 
         //过滤条件
-        Map<String, Object> filters = pageVo.getFilters();
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
         if (filters.containsKey("status")) {
-            queryWrapper.eq("status", filters.get("status"));
+            queryWrapper.eq("status", filters.remove("status"));
         } else {
             queryWrapper.ne("status", -1);
+        }
+        if (filters.containsKey("id")) {
+            queryWrapper.eq("id", filters.remove("id"));
+        }
+
+        //其他条件
+        for (String key : filters.keySet()) {
+            queryWrapper.like(key, "%" + filters.get(key) + "%");
         }
 
         //排序
@@ -77,13 +99,56 @@ public class UserController {
             return Result.success(pageList);
         }
 
-        return Result.success(pageList);
+        IPage<UserVo> pageUserVoList = new Page<>(pageVo.getPage(), pageVo.getSize());
+        pageUserVoList.setTotal(page.getTotal());
+
+        List<UserVo> list = new ArrayList<>();
+        for (SysUser user : pageList.getRecords()) {
+            UserVo userVo = new UserVo();
+            try {
+                BeanUtils.copyProperties(userVo, user);
+            } catch (Exception e) {
+                log.error("beanutils copy properties error", e);
+            }
+
+            SysDept dept = deptService.getById(userVo.getDeptId());
+            userVo.setDept(dept);
+
+            List<SysRole> roles = userService.listRoles(userVo.getId());
+            userVo.setRoles(roles);
+
+            list.add(userVo);
+        }
+        pageUserVoList.setRecords(list);
+
+        return Result.success(pageUserVoList);
     }
 
     @RequiresPermissions("user:query")
     @GetMapping("/{id}")
     public Result query(@PathVariable(value="id") Integer id) {
-        return Result.success(null);
+        SysUser user = userService.getById(id);
+        if (user == null) {
+            return Result.error(Result.Code.E_USER_NOT_EXIST, "用户不存在!");
+        }
+
+        user.setPassword(null);
+        user.setSalt(null);
+
+        UserVo userVo = new UserVo();
+        try {
+            BeanUtils.copyProperties(userVo, user);
+        } catch (Exception e) {
+            log.error("beanutils copy properties error", e);
+        }
+
+        SysDept dept = deptService.getById(userVo.getDeptId());
+        userVo.setDept(dept);
+
+        List<SysRole> roles = userService.listRoles(userVo.getId());
+        userVo.setRoles(roles);
+
+        return Result.success(userVo);
     }
 
     @RequiresPermissions("user:create")

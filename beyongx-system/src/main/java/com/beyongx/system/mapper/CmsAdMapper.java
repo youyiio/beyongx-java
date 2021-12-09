@@ -1,6 +1,7 @@
 package com.beyongx.system.mapper;
 
 import com.beyongx.system.entity.CmsAd;
+import com.beyongx.system.vo.AdVo;
 
 import java.util.Map;
 
@@ -17,6 +18,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  */
 public interface CmsAdMapper extends BaseMapper<CmsAd> {
 
-    IPage<CmsAd> selectBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params);
+    IPage<AdVo> selectBySlotId(IPage<CmsAd> page, Integer slotId, Map<String, Object> params);
     
 }

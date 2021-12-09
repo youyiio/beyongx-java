@@ -4,6 +4,7 @@ package com.beyongx.bootstrap.config;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.extension.MybatisMapWrapperFactory;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
@@ -13,6 +14,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -47,11 +49,12 @@ public class DataSourceConfig {
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/**/*.xml"));
 
         // 指明实体扫描(多个package用逗号或者分号分隔)
-        bean.setTypeAliasesPackage("com.beyongx.framework,com.beyongx.system,cn.airsafety.sms");
+        bean.setTypeAliasesPackage("com.beyongx.framework,com.beyongx.system");
         // 导入mybatis配置
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setJdbcTypeForNull(JdbcType.NULL);
         configuration.setMapUnderscoreToCamelCase(true);
+        configuration.setCallSettersOnNulls(true);
         configuration.setCacheEnabled(false);
         // 配置打印sql语句
         configuration.setLogImpl(StdOutImpl.class);
@@ -82,23 +85,25 @@ public class DataSourceConfig {
         return interceptor;
     }
 
-//    public GlobalConfiguration globalConfiguration() {
-//
-//    }
-    /**
-     * Mapper接口所在包名，Spring会自动查找其下的Mapper
-     *
-     * @return mapperScannerConfigurer
-     */
+    //mybatis-plus map返回驼峰：map-underscore-to-camel-case
+    // @Bean
+    // public ConfigurationCustomizer configurationCustomizer() {
+    //     return i -> i.setObjectWrapperFactory(new MybatisMapWrapperFactory());
+    // }
+    @Bean
+    public ConfigurationCustomizer mybatisConfigurationCustomizer() {
+        return new ConfigurationCustomizer() {
+            @Override        
+            public void customize(org.apache.ibatis.session.Configuration configuration) {
+                configuration.setObjectWrapperFactory(new MybatisMapWrapperFactory());
+            }
+        };
+    }
 
-//    @Bean
-//    public MapperScannerConfigurer mapperScannerConfigurer() {
-//        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-//        mapperScannerConfigurer.setBasePackage("**.mapper");
-//        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
-//
-//        return mapperScannerConfigurer;
-//    }
+    // @Bean
+    // public Configuration globalConfiguration() {
+    //    return new org.apache.ibatis.session.Configuration();
+    // }
 
 
 }

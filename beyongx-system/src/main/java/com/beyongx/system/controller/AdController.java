@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.CmsAd;
@@ -63,20 +65,15 @@ public class AdController {
         }
 
         IPage<CmsAd> page = new Page<>(pageVo.getPage(), pageVo.getSize());
-        IPage<CmsAd> pageList = new Page<>(pageVo.getPage(), pageVo.getSize());
+        IPage<AdVo> pageList = new Page<>(pageVo.getPage(), pageVo.getSize());
 
+        Integer slotId = null;
         if (filters.containsKey("slotId")) {
-            Integer slotId = (Integer)filters.remove("slotId");
-            
-            Map<String, Object> params = pageVo.getFilters();
-            pageList = adService.listBySlotId(page, slotId, params);
-
-        } else {
-            pageList = adService.page(page, queryWrapper);
-            if (CollectionUtils.isEmpty(pageList.getRecords())) {
-                return Result.success(pageList);
-            }
+            slotId = (Integer)filters.remove("slotId");       
         }
+
+        Map<String, Object> params = pageVo.getFilters();
+        pageList = adService.listBySlotId(page, slotId, params);
         
 
         return Result.success(pageList);
@@ -93,7 +90,7 @@ public class AdController {
 
     @RequiresPermissions("ad:create")
     @PostMapping("/create")
-    public Result create(@Validated({Always.class}) @RequestBody AdVo adVo) {
+    public Result create(@Validated({Always.class, Create.class}) @RequestBody AdVo adVo) {
         AdVo result = adService.createAd(adVo);
 
         return Result.success(result);
@@ -101,7 +98,7 @@ public class AdController {
 
     @RequiresPermissions("ad:edit")
     @PostMapping("/edit")
-    public Result edit(@Validated({Always.class}) @RequestBody AdVo adVo) {
+    public Result edit(@Validated({Always.class, Edit.class}) @RequestBody AdVo adVo) {
         AdVo result = adService.editAd(adVo);
 
         return Result.success(result);
@@ -118,6 +115,13 @@ public class AdController {
     @RequiresPermissions("ad:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
+        CmsAd ad = adService.getById(id);
+        if (ad == null) {
+            return Result.error(Result.Code.E_DATA_NOT_FOUND, "广告不存在!");
+        }
+
+        adService.removeAd(id);
+        
         return Result.success(null);
     }
 }

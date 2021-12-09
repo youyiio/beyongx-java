@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.system.entity.CmsCategory;
 import com.beyongx.system.entity.SysFile;
 
@@ -17,14 +18,6 @@ import lombok.Data;
 @Data
 public class ArticleVo implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    public interface Create {
-
-    }
-
-    public interface Edit {
-
-    }
 
     @NotNull(message = "文章id不能为空", groups = {Edit.class})
     private Integer id;
