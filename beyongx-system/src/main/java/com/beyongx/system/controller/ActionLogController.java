@@ -30,7 +30,7 @@ public class ActionLogController {
     @Autowired
     private ISysActionLogService actionLogService;
 
-    @RequiresPermissions("actionLog:list")
+    @RequiresPermissions("log:list")
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public Result list(@Validated @RequestBody PageVo pageVo) {
         QueryWrapper<SysActionLog> queryWrapper = new QueryWrapper<>();

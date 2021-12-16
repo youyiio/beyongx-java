@@ -37,7 +37,7 @@ public class SysRole implements Serializable {
     /**
      * 状态:1.激活;2.冻结;3.删除
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 备注

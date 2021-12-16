@@ -1,9 +1,9 @@
 package com.beyongx.system.mapper;
 
 import com.beyongx.system.entity.SysRole;
+import com.beyongx.system.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * <p>
@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
-    //List<SysRole> selectByUid(Integer uid);
+    IPage<SysUser> selectUsersByIdPage(IPage<SysUser> page, Integer id);
 }

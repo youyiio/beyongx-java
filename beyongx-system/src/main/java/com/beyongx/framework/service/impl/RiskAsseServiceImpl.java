@@ -30,12 +30,12 @@ public class RiskAsseServiceImpl implements IRiskAsseService {
             throw new ServiceException(Result.Code.E_RISK_ASSE_CODE_CHECK, Result.Msg.E_RISK_ASSE_CODE_CHECK);
         }
         if (tryLoginCount > 5) {
-            throw new ServiceException(Result.Code.E_USER_STATE_FREED, Result.Msg.E_USER_STATE_FREED);
+            throw new ServiceException(Result.Code.E_USER_STATUS_FREED, Result.Msg.E_USER_STATUS_FREED);
         }
         if (tryLoginCount >= 5) {
             redisTemplate.opsForValue().set(tryLoginCountMark, tryLoginCount + 1);
 
-            throw new ServiceException(Result.Code.E_USER_STATE_FREED, "登录错误超过5次,账号被临时冻结1天");
+            throw new ServiceException(Result.Code.E_USER_STATUS_FREED, "登录错误超过5次,账号被临时冻结1天");
         }
         
         return true;

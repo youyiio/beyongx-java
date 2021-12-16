@@ -86,15 +86,16 @@ public class Result {
         public static final int E_USER_EMAIL_NOT_EXIST         = 1003;     //邮箱不存在
         public static final int E_USER_PASSWORD_INCORRECT      = 1004;     //密码不正确
         public static final int E_USER_MOBILE_HAS_EXIST        = 1005;     //手机号已经存在
-        public static final int E_USER_EMAIL_HAS_EXIST         = 10060;    //邮箱已经存在
-        public static final int E_USER_ACCOUNT_HAS_EXIST       = 10061;    //帐号已经存在
-        public static final int E_USER_STATUS_NOT_ACTIVED      = 1006;     //用户未激活
-        public static final int E_USER_STATUS_FREED            = 1007;     //用户已冻结
-        public static final int E_USER_STATUS_DELETED          = 1008;     //用户已删除
-        public static final int E_USER_STATUS_INVALID          = 1009;     //用户状态不合法
+        public static final int E_USER_EMAIL_HAS_EXIST         = 1006;    //邮箱已经存在
+        public static final int E_USER_ACCOUNT_HAS_EXIST       = 1007;    //帐号已经存在
+        public static final int E_USER_STATUS_NOT_ACTIVED      = 1008;     //用户未激活
+        public static final int E_USER_STATUS_FREED            = 1009;     //用户已冻结
+        public static final int E_USER_STATUS_DELETED          = 1010;     //用户已删除
+        public static final int E_USER_STATUS_INVALID          = 1011;     //用户状态不合法
 
         //角色权限模块
-        public static final int E_AUTH_MENU_NOT_FOUND       = 2001;   //权限菜单不存在
+        public static final int E_ROLE_NOT_FOUND       = 2001;   //角色不存在
+        public static final int E_MENU_NOT_FOUND       = 2010;   //菜单不存在
 
         //内容管理模块
         public static final int E_CMS_ARTICLE_NOT_FOUND     = 3001;  //文章未找到
@@ -160,7 +161,8 @@ public class Result {
         public static final String E_USER_STATUS_INVALID          = "用户状态不合法";
 
         //角色权限模块
-        public static final String E_AUTH_MENU_NOT_FOUND       = "权限菜单不存在";
+        public static final String E_ROLE_NOT_FOUND       = "角色不存在";
+        public static final String E_MENU_NOT_FOUND       = "菜单不存在";
 
         //内容管理模块
         public static final String E_CMS_ARTICLE_NOT_FOUND     = "文章未找到";
