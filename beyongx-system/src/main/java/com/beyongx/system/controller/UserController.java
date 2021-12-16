@@ -7,18 +7,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.beyongx.common.utils.IpUtils;
+import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.SysDept;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
+import com.beyongx.system.entity.meta.UserMeta;
 import com.beyongx.system.service.ISysDeptService;
 import com.beyongx.system.service.ISysRoleService;
 import com.beyongx.system.service.ISysUserService;
 import com.beyongx.system.vo.UserVo;
+import com.beyongx.system.vo.UserVo.ModifyPassword;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -153,19 +161,144 @@ public class UserController {
 
     @RequiresPermissions("user:create")
     @PostMapping("/create")
-    public Result create() {
-        return Result.success(null);
+    public Result create(@Validated({Always.class, Create.class}) @RequestBody UserVo userVo, HttpServletRequest request) {
+
+        String ip = IpUtils.getIpAddr(request);
+
+        SysUser user = userService.createUser(userVo, ip);
+        if (user == null) {
+            return Result.error(Result.Code.E_DB_ERROR, "用户创建失败!");
+        }
+
+        List<SysRole> roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+
+        UserVo newUserVo = new UserVo();
+        try {
+            BeanUtils.copyProperties(newUserVo, user);
+        } catch (Exception e) {
+            log.error("beanutils copy properties error", e);
+        }
+
+        newUserVo.setPassword(null);
+        
+        SysDept dept = deptService.getById(newUserVo.getDeptId());
+        newUserVo.setDept(dept);
+
+        newUserVo.setRoles(roles);
+
+        return Result.success(newUserVo);
     }
 
     @RequiresPermissions("user:edit")
     @PostMapping("/edit")
-    public Result edit() {
-        return Result.success(null);
+    public Result edit(@Validated({Always.class, Edit.class}) @RequestBody UserVo userVo, HttpServletRequest request) {
+        String ip = IpUtils.getIpAddr(request);
+
+        SysUser user = userService.editUser(userVo, ip);
+        if (user == null) {
+            return Result.error(Result.Code.E_DB_ERROR, "用户创建失败!");
+        }
+
+        List<SysRole> roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+
+        UserVo newUserVo = new UserVo();
+        try {
+            BeanUtils.copyProperties(newUserVo, user);
+        } catch (Exception e) {
+            log.error("beanutils copy properties error", e);
+        }
+
+        newUserVo.setPassword(null);
+        
+        SysDept dept = deptService.getById(newUserVo.getDeptId());
+        newUserVo.setDept(dept);
+
+        newUserVo.setRoles(roles);
+
+        return Result.success(newUserVo);
     }
 
     @RequiresPermissions("user:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
+        SysUser user = userService.getById(id);
+        if (user == null || user.getStatus() == UserMeta.Status.DELETED.getCode()) {
+            return Result.error(Result.Code.E_USER_NOT_EXIST, Result.Msg.E_USER_NOT_EXIST);
+        }
+
+        user.setStatus(UserMeta.Status.DELETED.getCode());
+        userService.updateById(user);
+
         return Result.success(null);
+    }
+
+    @RequiresPermissions("user:modifyPassword")
+    @PostMapping("/modifyPassword")
+    public Result modifyPassword(@Validated({Always.class, ModifyPassword.class}) @RequestBody UserVo userVo) {
+        SysUser user = userService.getById(userVo.getId());
+        if (user == null || user.getStatus() == UserMeta.Status.DELETED.getCode()) {
+            return Result.error(Result.Code.E_USER_NOT_EXIST, Result.Msg.E_USER_NOT_EXIST);
+        }
+
+        userService.modifyPassword(userVo.getId(), userVo.getPassword());
+
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("user:freeze")
+    @PostMapping("/freeze")
+    public Result freeze(@RequestBody UserVo userVo) {
+        Integer uid = userVo.getId();
+        if (uid == null) {
+            return Result.error(Result.Code.E_PARAM_ERROR, "用户ID不能为空");
+        }
+
+        userService.freeze(uid);
+
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("user:unfreeze")
+    @PostMapping("/unfreeze")
+    public Result unfreeze(@RequestBody UserVo userVo) {
+        Integer uid = userVo.getId();
+        if (uid == null) {
+            return Result.error(Result.Code.E_PARAM_ERROR, "用户ID不能为空");
+        }
+
+        userService.unfreeze(uid);
+
+        return Result.success(null);
+    }
+
+    @RequiresPermissions("user:addRoles")
+    @PostMapping("/addRoles")
+    public Result addRoles(@RequestBody UserVo userVo) {
+        if (userVo.getRoleIds() == null || userVo.getRoleIds().size() == 0) {
+            return Result.error(Result.Code.E_PARAM_VALIDATE_ERROR, "参数roleIds不能为空!");
+        }
+
+        SysUser user = userService.getById(userVo.getId());
+        if (user == null || user.getStatus() == UserMeta.Status.DELETED.getCode()) {
+            return Result.error(Result.Code.E_USER_NOT_EXIST, Result.Msg.E_USER_NOT_EXIST);
+        }
+
+        List<SysRole> roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+
+        UserVo newUserVo = new UserVo();
+        try {
+            BeanUtils.copyProperties(newUserVo, user);
+        } catch (Exception e) {
+            log.error("beanutils copy properties error", e);
+        }
+
+        newUserVo.setPassword(null);
+        
+        SysDept dept = deptService.getById(newUserVo.getDeptId());
+        newUserVo.setDept(dept);
+
+        newUserVo.setRoles(roles);
+
+        return Result.success(newUserVo);
     }
 }

@@ -5,6 +5,7 @@ import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.beyongx.system.vo.SignUser;
+import com.beyongx.system.vo.UserVo;
 
 import java.util.List;
 
@@ -33,4 +34,17 @@ public interface ISysUserService extends IService<SysUser> {
     List<SysRole> listRoles(Integer uid);
 
     List<SysJob> listJobs(Integer uid);
+
+    SysUser createUser(UserVo userVo, String ip);
+
+    SysUser editUser(UserVo userVo, String ip);
+
+    //分配角色
+    List<SysRole> assignRoles(Integer uid, List<Integer> roleIds);
+
+    boolean modifyPassword(Integer uid, String plainPassword);
+
+    boolean freeze(Integer uid);
+
+    boolean unfreeze(Integer uid);
 }

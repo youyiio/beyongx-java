@@ -34,6 +34,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
 	<dependencies>
@@ -157,11 +159,13 @@
 		</dependency>
 	</dependencies>
 
-	<!-- <build>
-		<sourceDirectory>beyongx-bootstrap/src/main/java,beyongx-system/src/main/java</sourceDirectory>
+	<build>
+		<finalName>${project.artifactId}</finalName>
+
+		<!-- <sourceDirectory>beyongx-bootstrap/src/main/java,beyongx-system/src/main/java</sourceDirectory> -->
 		
         <plugins>
-       		<plugin>
+       		<!-- <plugin>
        			<groupId>org.springframework.boot</groupId>
        			<artifactId>spring-boot-maven-plugin</artifactId>
        			<configuration>
@@ -173,9 +177,10 @@
        					</exclude>
        				</excludes>
        			</configuration>
-       		</plugin>
+       		</plugin> -->
        	</plugins>
-	</build> -->
+		
+	</build>
 
     
 	<repositories>

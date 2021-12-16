@@ -28,6 +28,9 @@
 
 > mvn clean package -Dmaven.test.skip=true
 
+如果maven配置了profile.active
+> mvn package -Pprod
+
 ### 安装
 
 > mvn install
@@ -43,7 +46,6 @@
 > mvn clean deploy –P release -Dgpg.passphrase=xxx
 
 > mvn clean deploy -Dmaven.test.skip=true –P release -Dgpg.passphrase=xxx
-
 
 ## SpringBoot相关
 

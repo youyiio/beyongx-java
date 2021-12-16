@@ -1,12 +1,10 @@
 package com.beyongx.system.controller;
 
-import com.beyongx.common.utils.DateTimeUtils;
 import com.beyongx.common.utils.IpUtils;
 import com.beyongx.common.utils.ValidateUtils;
 import com.beyongx.common.validation.group.Always;
 import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.SysUser;
-import com.beyongx.system.entity.meta.UserMeta;
 import com.beyongx.framework.config.ShiroConfig;
 import com.beyongx.framework.service.ICodeService;
 import com.beyongx.framework.shiro.JwtUser;
@@ -17,7 +15,6 @@ import com.beyongx.system.vo.SignUser;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -63,11 +60,11 @@ public class SignController {
             return Result.error(Result.Code.E_RISK_ASSE_CODE_CHECK, Result.Msg.E_RISK_ASSE_CODE_CHECK);
         }
         if (tryLoginCount > 5) {
-            return Result.error(Result.Code.E_USER_STATE_FREED, Result.Msg.E_USER_STATE_FREED);
+            return Result.error(Result.Code.E_USER_STATUS_FREED, Result.Msg.E_USER_STATUS_FREED);
         }
         if (tryLoginCount >= 5) {
             redisTemplate.opsForValue().set(tryLoginCountMark, tryLoginCount + 1);
-            return Result.error(Result.Code.E_USER_STATE_FREED, Result.Msg.E_USER_STATE_FREED);
+            return Result.error(Result.Code.E_USER_STATUS_FREED, Result.Msg.E_USER_STATUS_FREED);
         }
 
         SysUser user = null;
