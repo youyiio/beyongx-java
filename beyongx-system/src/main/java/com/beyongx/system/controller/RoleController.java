@@ -27,7 +27,6 @@ import com.beyongx.system.vo.RoleVo;
 import com.beyongx.system.vo.UserVo;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

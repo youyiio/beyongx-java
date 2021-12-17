@@ -3,6 +3,11 @@ package com.beyongx.system.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Node;
 
 import lombok.Data;
@@ -11,73 +16,40 @@ import lombok.Data;
 public class MenuVo extends Node implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 标题
-     */
+    //private Integer id; //Node已经包含id
+    
+    @NotBlank(message ="菜单标题不能为空", groups = {Create.class, Edit.class})
     private String title;
 
-    /**
-     * 名称
-     */
+    //@NotBlank(message ="组件名称不能为空", groups = {Create.class})
     private String name;
 
-    /**
-     * 组件
-     */
+    //@NotBlank(message ="组件地址不能为空", groups = {Create.class})
     private String component;
 
-    /**
-     * 路径
-     */
+    @NotBlank(message ="路由地址不能为空", groups = {Create.class, Edit.class})
     private String path;
 
-    /**
-     * 图标
-     */
     private String icon;
 
-    /**
-     * 菜单类型 0.网页页面1.菜单组件2.动作组件（捆绑请求）
-     */
+    @NotNull(message = "菜单类型不能为空", groups = {Create.class, Edit.class})
     private Integer type;
 
-    /**
-     * 是否菜单
-     */
+    @NotNull(message = "是否菜单不能为空", groups = {Create.class, Edit.class})
     private Boolean isMenu;
 
-    /**
-     * 权限
-     */
     private String permission;
 
-    /**
-     * 状态 -1.删除;1.激活;2.暂停;
-     */
     private Integer status;
 
-    /**
-     * 归属于
-     */
+    @NotBlank(message ="归属模块不能为空", groups = {Create.class, Edit.class})
     private String belongsTo;
 
-    /**
-     * 创建者
-     */
     private String createBy;
 
-    /**
-     * 更新者
-     */
     private String updateBy;
 
-    /**
-     * 创建时间
-     */
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
     private Date updateTime;
 }

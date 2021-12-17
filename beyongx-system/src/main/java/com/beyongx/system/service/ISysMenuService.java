@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.SysMenu;
+import com.beyongx.system.vo.MenuVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -15,6 +16,10 @@ import java.util.List;
  */
 public interface ISysMenuService extends IService<SysMenu> {
 
+    SysMenu createMenu(MenuVo menuVo);
+
+    SysMenu editMenu(MenuVo menuVo);
+    
     List<SysMenu> listMenusByRoleId(Integer roleId, String belongsTo);
 
     List<SysMenu> listMenusByRoleIds(Integer[] roleIds, String belongsTo);

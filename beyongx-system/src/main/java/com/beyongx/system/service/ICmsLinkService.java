@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.CmsLink;
+import com.beyongx.system.vo.LinkVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICmsLinkService extends IService<CmsLink> {
 
+    CmsLink createLink(LinkVo linkVo);
+
+    CmsLink editLink(LinkVo linkVo);
 }

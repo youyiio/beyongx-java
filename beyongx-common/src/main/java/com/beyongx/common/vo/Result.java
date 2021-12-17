@@ -99,7 +99,8 @@ public class Result {
 
         //内容管理模块
         public static final int E_CMS_ARTICLE_NOT_FOUND     = 3001;  //文章未找到
-        public static final int E_CMS_CATEGORY_NOT_SUPPORT  = 3042;  //文章分类不支持
+        public static final int E_CMS_CATEGORY_NOT_SUPPORT  = 3011;  //文章分类不支持
+        public static final int E_CMS_LINK_NOT_FOUND        = 3021;  //友链不存在
 
     }
 
@@ -167,5 +168,6 @@ public class Result {
         //内容管理模块
         public static final String E_CMS_ARTICLE_NOT_FOUND     = "文章未找到";
         public static final String E_CMS_CATEGORY_NOT_SUPPORT  = "文章分类不支持";
+        public static final String E_CMS_LINK_NOT_FOUND        = "友链未找到";
     }
 }
