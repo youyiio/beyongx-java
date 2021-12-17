@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.SysConfig;
+import com.beyongx.system.vo.ConfigVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -17,4 +18,7 @@ public interface ISysConfigService extends IService<SysConfig> {
 
     SysConfig getByGroupAndKey(String group, String key);
 
+    SysConfig createConfig(ConfigVo configVo);
+
+    SysConfig editConfig(ConfigVo configVo);
 }

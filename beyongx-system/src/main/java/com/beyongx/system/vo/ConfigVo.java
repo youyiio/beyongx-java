@@ -3,71 +3,50 @@ package com.beyongx.system.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
+
 import lombok.Data;
 
 @Data
 public class ConfigVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @NotNull(message = "字典id不能为空!", groups = {Edit.class})
     private Integer id;
 
-    /**
-     * 字典名称
-     */
+    @NotBlank(message = "字典名称不能为空!", groups = {Create.class, Edit.class})
     private String name;
 
-    /**
-     * 字典组
-     */
+    @NotBlank(message = "字典组不能为空!", groups = {Create.class, Edit.class})
     private String group;
 
-    /**
-     * 字典键
-     */
+    @NotBlank(message = "字典键不能为空!", groups = {Create.class, Edit.class})
     private String key;
 
-    /**
-     * 字典值
-     */
+    @NotBlank(message = "字典值不能为空!", groups = {Create.class, Edit.class})
     private String value;
 
-    /**
-     * 值类型
-     */
+    @NotBlank(message = "字典值类型不能为空!", groups = {Create.class, Edit.class})
+    @Pattern(message = "字典值类型只能为integer、float、string、text或boolean", regexp = "integer|float|string|text|boolean", groups = {Create.class, Edit.class})
     private String valueType;
 
-    /**
-     * 启用状态
-     */
     private Integer status;
 
-    /**
-     * 排序
-     */
+    @NotNull(message = "排序不能为空!", groups = {Create.class, Edit.class})
     private Integer sort;
 
-    /**
-     * 备注
-     */
     private String remark;
 
-    /**
-     * 创建者
-     */
     private String createBy;
 
-    /**
-     * 更新者
-     */
     private String updateBy;
 
-    /**
-     * 创建时间
-     */
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
     private Date updateTime;
 }

@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.SysJob;
+import com.beyongx.system.vo.JobVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysJobService extends IService<SysJob> {
 
+    SysJob createJob(JobVo jobVo);
+
+    SysJob editJob(JobVo jobVo);
 }

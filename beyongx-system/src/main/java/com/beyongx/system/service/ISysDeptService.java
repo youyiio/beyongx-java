@@ -1,6 +1,7 @@
 package com.beyongx.system.service;
 
 import com.beyongx.system.entity.SysDept;
+import com.beyongx.system.vo.DeptVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysDeptService extends IService<SysDept> {
 
+    SysDept createDept(DeptVo deptVo);
+
+    SysDept editDept(DeptVo deptVo);
 }

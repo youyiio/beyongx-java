@@ -5,7 +5,7 @@ public class MenuMeta {
     public static enum Status {
         DELETED(-1), //删除
         ACTIVE(1), //激活
-        PAUSE(2); //暂停
+        PAUSE(0); //暂停
 
         private int code;
         private Status(int code) {

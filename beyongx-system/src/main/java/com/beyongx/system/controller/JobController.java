@@ -2,22 +2,28 @@ package com.beyongx.system.controller;
 
 
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Create;
+import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.SysJob;
+import com.beyongx.system.entity.meta.JobMeta;
 import com.beyongx.system.service.ISysJobService;
+import com.beyongx.system.vo.JobVo;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,10 +54,25 @@ public class JobController {
     public Result list(@Validated @RequestBody PageVo pageVo) {
         QueryWrapper<SysJob> queryWrapper = new QueryWrapper<>();
         
+        //条件过滤
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
+        
+        if (filters.containsKey("status")) {
+            queryWrapper.eq("status", (Integer)filters.remove("status"));
+        } else {
+            queryWrapper.ne("status", JobMeta.Status.DELETED.getCode());
+        }        
+
+        if (filters.containsKey("title")) {
+            String keyword = (String)filters.remove("title");
+            queryWrapper.like("title", keyword);
+        }
+
         //排序
         Map<String, String> orders = pageVo.getOrders();
         if (orders.size() == 0) {
-            queryWrapper.orderByAsc("id");
+            queryWrapper.orderByAsc("sort").orderByAsc("id");
         } else {
             for (String key : orders.keySet()) {
                 String val = orders.get(key);
@@ -70,27 +91,35 @@ public class JobController {
         return Result.success(pageList);
     }
 
-    @RequiresPermissions("job:query")
-    @GetMapping("/{id}")
-    public Result query(@PathVariable(value="id") Integer id) {
-        return Result.success(null);
-    }
-
     @RequiresPermissions("job:create")
     @PostMapping("/create")
-    public Result create() {
-        return Result.success(null);
+    public Result create(@Validated({Always.class, Create.class}) @RequestBody JobVo jobVo) {
+        SysJob job = jobService.createJob(jobVo);
+
+        return Result.success(job);
     }
 
     @RequiresPermissions("job:edit")
     @PostMapping("/edit")
-    public Result edit() {
-        return Result.success(null);
+    public Result edit(@Validated({Always.class, Edit.class}) @RequestBody JobVo jobVo) {
+        SysJob job = jobService.editJob(jobVo);
+
+        return Result.success(job);
     }
 
     @RequiresPermissions("job:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
+        SysJob dept = jobService.getById(id);
+        if (dept == null) {
+            return Result.error(Result.Code.E_JOB_NOT_FOUND, "岗位不存在!");
+        }
+
+        dept.setStatus(JobMeta.Status.DELETED.getCode());
+        dept.setUpdateTime(new Date());
+
+        jobService.updateById(dept);
+
         return Result.success(null);
     }
 

@@ -1,14 +1,18 @@
 package com.beyongx.system.controller;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.beyongx.common.validation.group.Always;
+import com.beyongx.common.validation.group.Create;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.SysConfig;
+import com.beyongx.system.entity.meta.ConfigMeta;
 import com.beyongx.system.service.ISysConfigService;
 import com.beyongx.system.vo.ConfigVo;
 
@@ -49,6 +53,23 @@ public class ConfigController {
     public Result list(@Validated @RequestBody PageVo pageVo) {
         QueryWrapper<SysConfig> queryWrapper = new QueryWrapper<>();
         
+        //条件过滤
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
+
+        if (filters.containsKey("keyword")) {
+            String keyword = (String)filters.remove("keyword");
+            queryWrapper.like("name", keyword);
+        }
+        if (filters.containsKey("group")) {
+            String group = (String)filters.remove("group");
+            queryWrapper.like("`group`", group);
+        }
+        if (filters.containsKey("key")) {
+            String key = (String)filters.remove("key");
+            queryWrapper.like("`key`", key);
+        }
+        
         //排序
         Map<String, String> orders = pageVo.getOrders();
         if (orders.size() == 0) {
@@ -71,27 +92,45 @@ public class ConfigController {
         return Result.success(pageList);
     }
 
-    @RequiresPermissions("config:query")
-    @GetMapping("/{id}")
-    public Result query(@PathVariable(value="id") Integer id) {
-        return Result.success(null);
+    @RequiresPermissions("config:groups")
+    @RequestMapping(value="/groups", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result groups(@Validated @RequestBody PageVo pageVo) {
+        QueryWrapper<SysConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", ConfigMeta.Status.ONLINE.getCode());
+        queryWrapper.select("distinct `group`");
+
+        IPage<Map<String, Object>> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        IPage<Map<String, Object>> pageList = configService.pageMaps(page, queryWrapper);
+
+        return Result.success(pageList);
     }
 
     @RequiresPermissions("config:create")
     @PostMapping("/create")
-    public Result create() {
-        return Result.success(null);
+    public Result create(@Validated({Always.class, Create.class}) @RequestBody ConfigVo configVo) {
+        SysConfig config = configService.createConfig(configVo);
+
+        return Result.success(config);
     }
 
     @RequiresPermissions("config:edit")
     @PostMapping("/edit")
-    public Result edit() {
-        return Result.success(null);
+    public Result edit(@Validated({Always.class, Create.class}) @RequestBody ConfigVo configVo) {
+        SysConfig config = configService.editConfig(configVo);
+
+        return Result.success(config);
     }
 
     @RequiresPermissions("config:delete")
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable(value="id") Integer id) {
+        SysConfig config = configService.getById(id);
+        if (config == null) {
+            return Result.error(Result.Code.E_CONFIG_NOT_FOUND, "字典不存在!");
+        }
+
+        configService.removeById(id);
+
         return Result.success(null);
     }
 

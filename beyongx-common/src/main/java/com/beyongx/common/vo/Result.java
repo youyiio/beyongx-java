@@ -93,6 +93,14 @@ public class Result {
         public static final int E_USER_STATUS_DELETED          = 1010;     //用户已删除
         public static final int E_USER_STATUS_INVALID          = 1011;     //用户状态不合法
 
+        //配置模块
+        public static final int E_CONFIG_NOT_FOUND         = 1101;   //字典不存在;
+        public static final int E_CONFIG_GROUP_KEY_UNIQ    = 1101;   //字典组和键的组合已被占用;
+
+        //部门岗位模块
+        public static final int E_DEPT_NOT_FOUND      = 1111;   //部门不存在;
+        public static final int E_JOB_NOT_FOUND       = 1121;   //岗位不存在;
+
         //角色权限模块
         public static final int E_ROLE_NOT_FOUND       = 2001;   //角色不存在
         public static final int E_MENU_NOT_FOUND       = 2010;   //菜单不存在
@@ -160,6 +168,14 @@ public class Result {
         public static final String E_USER_STATUS_FREED            = "用户已冻结";
         public static final String E_USER_STATUS_DELETED          = "用户已删除";
         public static final String E_USER_STATUS_INVALID          = "用户状态不合法";
+
+        //配置模块
+        public static final String E_CONFIG_NOT_FOUND         = "字典不存在";
+        public static final String E_CONFIG_GROUP_KEY_UNIQ    = "字典组和键的组合已被占用";
+
+        //部门岗位模块
+        public static final String E_DEPT_NOT_FOUND      = "部门不存在";
+        public static final String E_JOB_NOT_FOUND       = "岗位不存在";
 
         //角色权限模块
         public static final String E_ROLE_NOT_FOUND       = "角色不存在";
