@@ -2,7 +2,9 @@ package com.beyongx.system.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -135,8 +137,9 @@ public class ConfigController {
     }
 
 
+    //查询字典信息
     @RequiresPermissions("config:query")
-    @DeleteMapping("/query")
+    @PostMapping("/query")
     public Result queryByKey(@RequestBody ConfigVo configVo) {
         SysConfig sysConfig = null;
         if (StringUtils.isBlank(configVo.getGroup())) {
@@ -145,6 +148,34 @@ public class ConfigController {
             sysConfig = configService.getByGroupAndKey(configVo.getGroup(), configVo.getKey());
         }
 
+        if (sysConfig == null) {
+            return Result.error(Result.Code.E_DATA_NOT_FOUND, "字典未找到!");
+        }
+
         return Result.success(sysConfig);
+    }
+
+    //查询状态字典
+    @RequiresPermissions("config:status")
+    @GetMapping("/{name}/status")
+    public Result statusDicts(@PathVariable(value="name") String name) {
+        String group = name + "_status";
+
+        QueryWrapper<SysConfig> wrapper = new QueryWrapper<>();
+        wrapper.eq("`group`", group);
+        wrapper.eq("status", ConfigMeta.Status.ONLINE.getCode());
+        
+        List<SysConfig> list = configService.list(wrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return Result.success(list);
+        }
+
+        List<Map<String, Object>> statusMaps = list.stream().map(config -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put(config.getKey(), config.getValue());
+            return map;
+        }).collect(Collectors.toList());
+
+        return Result.success(statusMaps);
     }
 }

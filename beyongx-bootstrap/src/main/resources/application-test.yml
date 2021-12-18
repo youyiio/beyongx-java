@@ -18,8 +18,15 @@ logging:
         bootstrap: trace
     
 
-# DataSource
+# spring
 spring:
+  #servlet
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  
+  # DataSource
   datasource:
     #name: druidDataSource
     #type: com.alibaba.druid.pool.DruidDataSource
@@ -112,3 +119,9 @@ shiro:
     secret: xp1yutwt8Fxj5XEzes4j-X4tCBQwE0
     expired: 3600  # 秒
     action_excludes: /api/sign/login,/api/sign/register,/api/sms/sendCode,/api/sms/login
+
+#beyongx 配置
+beyongx:
+  file:
+    save_path: /data/application/beyongx-java/upload # 文件上传保存目录
+    url_relative_path: /upload  # http url的相对目录

@@ -133,4 +133,17 @@ public class UcenterController {
 
         return Result.success(treeMenuVoList);
     }
+
+    @RequiresPermissions("ucenter:modifyPassword")
+    @PostMapping("/modifyPassword")
+    public Result modifyPassword(@RequestBody UcenterVo ucenterVo) {
+        JwtUser jwtUser = JwtUtils.getUser();
+
+        boolean success = userService.modifyMyPassword(jwtUser.getUid(), ucenterVo.getOldPassword(), ucenterVo.getPassword());
+        if (!success) {
+            return Result.error(Result.Code.ACTION_FAILED, "密码修改失败!");
+        }
+
+        return Result.success(null);
+    }
 }

@@ -47,4 +47,6 @@ public interface ISysUserService extends IService<SysUser> {
     boolean freeze(Integer uid);
 
     boolean unfreeze(Integer uid);
+
+    boolean modifyMyPassword(Integer uid, String oldPassword, String passowrd);
 }

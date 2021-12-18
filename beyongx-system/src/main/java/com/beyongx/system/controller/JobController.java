@@ -4,6 +4,7 @@ package com.beyongx.system.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -123,4 +124,21 @@ public class JobController {
         return Result.success(null);
     }
 
+    
+    //查询岗位字典
+    @RequiresPermissions("job:dict")
+    @RequestMapping(value="/dict", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result dict() {
+        QueryWrapper<SysJob> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ne("status", JobMeta.Status.DELETED.getCode());
+        queryWrapper.orderByAsc("sort").orderByAsc("id");
+
+        
+        List<SysJob> jobList = jobService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(jobList)) {
+            return Result.success(jobList);
+        }
+
+        return Result.success(jobList);
+    }
 }

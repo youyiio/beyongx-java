@@ -28,7 +28,6 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -154,5 +153,37 @@ public class DeptController {
         deptService.updateById(dept);
 
         return Result.success(null);
+    }
+
+    //查询部门字典
+    @RequiresPermissions("dept:dict")
+    @RequestMapping(value="/dict", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result dict() {
+        QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ne("status", DeptMeta.Status.DELETED.getCode());
+        queryWrapper.orderByAsc("sort").orderByAsc("id");
+        
+        Integer pid = 0;
+        
+        List<SysDept> deptList = deptService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(deptList)) {
+            return Result.success(deptList);
+        }
+
+        //封装及分页
+        List<DeptVo> deptVoList = deptList.stream().map(dept -> {
+            DeptVo deptVo = new DeptVo();
+            try {
+                BeanUtils.copyProperties(deptVo, dept);
+            } catch(Exception e) {
+                log.error("bean copy error", e);
+            }
+            
+            return deptVo;
+        }).collect(Collectors.toList());
+
+        List<DeptVo> treeMenuVoList = TreeUtils.parse(pid, deptVoList);
+
+        return Result.success(treeMenuVoList);
     }
 }

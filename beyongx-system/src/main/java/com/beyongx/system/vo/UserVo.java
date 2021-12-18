@@ -37,8 +37,8 @@ public class UserVo {
     @Pattern(message = "账户为6-32位字母、数字组合!", regexp="[a-zA-z0-9]{6,32}", groups = {Edit.class})
     private String account;
 
-    @NotBlank(message = "密码为6-20位字母、数字或字符组合!", groups = {Create.class})
-    @Pattern(message = "密码为6-20位字母、数字或字符组合!", regexp="[a-zA-z0-9@_\\-]{6,20}", groups = {Create.class, ModifyPassword.class})
+    @NotBlank(message = "密码为6-20位字母、数字或字符(@-_)组合!", groups = {Create.class})
+    @Pattern(message = "密码为6-20位字母、数字或字符(@-_)组合!", regexp="[a-zA-z0-9@_\\-]{6,20}", groups = {Create.class, ModifyPassword.class})
     private String password;
 
     private Integer status;

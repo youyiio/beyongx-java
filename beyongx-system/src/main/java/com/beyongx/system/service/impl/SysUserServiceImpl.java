@@ -335,4 +335,28 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return true;
     }
 
+    @Override
+    public boolean modifyMyPassword(Integer uid, String oldPassword, String plainPassword) {
+        SysUser user = baseMapper.selectById(uid);
+        if (user == null || user.getStatus() == UserMeta.Status.DELETED.getCode()) {
+            throw new ServiceException(Result.Code.E_USER_NOT_EXIST, Result.Msg.E_USER_NOT_EXIST);
+        }
+
+        String salt = user.getSalt();
+
+        //验证旧密码
+        String encodedPassword = PasswordEncoder.encodePassword(oldPassword, salt);
+        if (!StringUtils.equals(encodedPassword, user.getPassword())) {
+            throw new ServiceException(Result.Code.E_USER_PASSWORD_INCORRECT, "原密码输入错误!");
+        }
+
+        //密码加密SHA-256       
+        String password = PasswordEncoder.encodePassword(plainPassword, salt);
+        user.setPassword(password);
+
+        baseMapper.updateById(user);
+
+        return true;
+    }
+
 }

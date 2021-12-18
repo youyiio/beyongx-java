@@ -35,7 +35,7 @@ public class SysFile implements Serializable {
 
     private String realName;
 
-    private Integer size;
+    private Long size;
 
     private String ext;
 

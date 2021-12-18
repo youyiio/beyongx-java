@@ -9,7 +9,7 @@ public class ValidateUtils {
 
 	// 通行证正则表达式
     private static final Pattern PATTERN_USERNAME = Pattern.compile("[a-zA-Z0-9_]{4,32}");
-    private static final Pattern PATTERN_PASSWORD = Pattern.compile("[a-zA-Z0-9_]{6,16}");
+    private static final Pattern PATTERN_PASSWORD = Pattern.compile("[a-zA-z0-9@_\\-]{6,20}");
     private static final Pattern PATTERN_EMAIL = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
             "\\@" +

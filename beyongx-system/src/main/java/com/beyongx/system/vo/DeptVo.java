@@ -12,8 +12,10 @@ import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Node;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class DeptVo extends Node implements Serializable {
     private static final long serialVersionUID = 1L;
 
