@@ -3,10 +3,12 @@ package com.beyongx.system.controller;
 
 import com.beyongx.common.utils.TreeUtils;
 import com.beyongx.common.vo.Result;
+import com.beyongx.system.entity.SysDept;
 import com.beyongx.system.entity.SysMenu;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.SysUserMeta;
+import com.beyongx.system.service.ISysDeptService;
 import com.beyongx.system.service.ISysMenuService;
 import com.beyongx.system.service.ISysUserMetaService;
 import com.beyongx.system.service.ISysUserService;
@@ -47,6 +49,8 @@ public class UcenterController {
     @Autowired
     private ISysUserMetaService userMetaService;
     @Autowired
+    private ISysDeptService deptService;
+    @Autowired
     private ISysMenuService menuService;
 
     @RequiresPermissions("ucenter:getInfo")
@@ -67,13 +71,11 @@ public class UcenterController {
             data.put("description", userMeta.getMetaValue());
         }
 
-        List<SysRole> roleList = userService.listRoles(user.getId());
-        List<String> roles = new ArrayList<>();
-        for (SysRole role : roleList) {
-            roles.add(role.getName());
-        }
-        
-        data.put("roles", roles);
+        SysDept dept = deptService.getById(user.getDeptId());
+        data.put("dept", dept);
+
+        List<SysRole> roleList = userService.listRoles(user.getId());        
+        data.put("roles", roleList);
 
         return Result.success(data);
     }

@@ -90,11 +90,15 @@ public class ArticleController {
 
         if (filters.containsKey("startTime")) {
             String startTime = (String)filters.remove("startTime");
-            queryWrapper.ge("create_time", startTime);
+            if (StringUtils.isNotBlank(startTime)) {
+                queryWrapper.ge("create_time", startTime);
+            }
         }
         if (filters.containsKey("endTime")) {
             String endTime = (String)filters.remove("endTime");
-            queryWrapper.lt("create_time", endTime);
+            if (StringUtils.isNotBlank(endTime)) {
+                queryWrapper.lt("create_time", endTime);
+            }
         }
         //其他条件
         // for (String key : filters.keySet()) {
