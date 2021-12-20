@@ -10,7 +10,7 @@
     </select>
 
     <select id="selectByRoleIds" resultType="SysMenu">
-        select m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id 
+        select distinct m.id as menu_id, m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id 
         <if test="belongsTo != null">
             and m.belongs_to = #{belongsTo}
         </if>
@@ -21,7 +21,7 @@
     </select>
 
     <select id="selectByRoleIdsAndOther" resultType="SysMenu">
-        select m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id 
+        select distinct m.id as menu_id, m.* from sys_menu as m, sys_role_menu as rm where m.id = rm.menu_id 
         <if test="belongsTo != null">
             and m.belongs_to = #{belongsTo}
         </if>
