@@ -40,9 +40,9 @@ public class ActionLogController {
         Map<String, Object> filters = new HashMap<>();
         filters.putAll(pageVo.getFilters());
         
-        String keyword = (String)filters.remove("keyword");
-        if (StringUtils.isNotBlank(keyword)) {            
-            queryWrapper.like("user_agent", keyword);
+        String username = (String)filters.remove("username");
+        if (StringUtils.isNotBlank(username)) {            
+            queryWrapper.like("username", username);
         }
         String startTime = (String)filters.remove("startTime");
         if (StringUtils.isNotBlank(startTime)) {
@@ -52,10 +52,14 @@ public class ActionLogController {
         if (StringUtils.isNotBlank(endTime)) {            
             queryWrapper.lt("action_time", endTime);
         }
-        //其他条件
-        for (String key : filters.keySet()) {
-            queryWrapper.eq(key, filters.get(key));
+        String action = (String)filters.remove("action");
+        if (StringUtils.isNotBlank(action)) {            
+            queryWrapper.eq("action", action);
         }
+        //其他条件
+        // for (String key : filters.keySet()) {
+        //     queryWrapper.eq(key, filters.get(key));
+        // }
         
 
         //排序

@@ -12,6 +12,8 @@ import com.baomidou.mybatisplus.generator.config.rules.FileType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,39 +22,50 @@ import java.util.Scanner;
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
 
-    public static final String DATABASE_URL = "jdbc:mysql://test.youyi.io:3306/beyongxdb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
+    public static final String DATABASE_URL = "jdbc:mysql://test.youyi.io:3306/hospitaldb?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
     //public static final String DATABASE_DBNAME = "";
-    public static final String DATABASE_USERNAME = "beyongxdba";
-    public static final String DATABASE_PASSWORD = "F05k[29_D$I#^1Zmnq6rAPu>";
+    public static final String DATABASE_USERNAME = "hospitaldba";
+    public static final String DATABASE_PASSWORD = "PAK8yJ-72nNUsdy15F5v1Gn7t";
 
-    public static final String MODULE_ROOT_PACKAGE_NAME = "com.beyongx"; //模块根包名，小写
-    public static final String MODULE_NAME = "system"; //模块子包名，小写
-    public static final String MAVEN_MODULE_NAME = "beyongx-system"; //springboot模块名,小写
+    public static final String MODULE_ROOT_PACKAGE_NAME = "com.beyongx"; //模块根包名，小写, 默认
+    public static final String MODULE_NAME = "system"; //模块子包名，小写, 默认
+    public static final String MAVEN_MODULE_NAME = "beyongx-system"; //springboot模块名,小写, 默认
 
     // 是否生成控制器开关
     public static final boolean SWITCH_GENERATE_CONTROLLER = false;
 
     /**
      * <p>
-     * 读取控制台内容
+     * 读取控制台内容 quetion and answer
      * </p>
      */
-    public static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
-        System.out.println(help.toString());
-//        if (scanner.hasNext()) {
-//            String ipt = scanner.next();
-//            if (StringUtils.isNotBlank(ipt)) {
-//                return ipt;
-//            }
-//            return ipt;
-//        }
-//        throw new MybatisPlusException("请输入正确的" + tip + "！");
+    public static String scanner(String tip, boolean closeConsole) {
+        System.out.println(tip);
 
-        String ipt = scanner.nextLine(); //允许空返回
-        return ipt;
+        Scanner scanner = null;
+        String input = "";
+        try {
+            scanner = new Scanner(System.in, "UTF-8");
+        
+            // if (scanner.hasNext()) {
+            //     String ipt = scanner.next();
+            //     if (StringUtils.isNotBlank(ipt)) {
+            //         return ipt;
+            //     }
+            //     return ipt;
+            // }
+            // throw new MybatisPlusException("请输入正确的" + tip + "！");
+            
+            input = scanner.nextLine(); //允许空返回
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (scanner != null && closeConsole) {
+                scanner.close();
+            }
+        }
+
+        return input;
     }
 
     /**
@@ -64,9 +77,23 @@ public class CodeGenerator {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
+        // >>>输入配置，moduleName
+        PackageConfig pc = new PackageConfig();
+        String moduleName = MODULE_NAME;
+        String mavenModuleName = MAVEN_MODULE_NAME;
+        String scannerStr = scanner("请输入模块子包名(小写):", false);
+        if (StringUtils.isNotBlank(scannerStr)) {
+            moduleName = scannerStr;
+            mavenModuleName = "beyongx-" + moduleName;
+        }
+
+        System.out.println("Create new Module: " + mavenModuleName);
+        System.out.println("Create Package name: " + MODULE_ROOT_PACKAGE_NAME + "." + moduleName);
+        //System.exit(0);
+        
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir") + "/" + MAVEN_MODULE_NAME;
+        String projectPath = System.getProperty("user.dir") + "/" + mavenModuleName;
         System.out.println(projectPath);
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("youyi.io");
@@ -77,7 +104,7 @@ public class CodeGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(DATABASE_URL);
-        // dsc.setSchemaName("public");
+        // dsc.setSchemaName(DATABASE_DBNAME);
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername(DATABASE_USERNAME);
         dsc.setPassword(DATABASE_PASSWORD);
@@ -97,8 +124,7 @@ public class CodeGenerator {
         });
 
         // 包配置
-        PackageConfig pc = new PackageConfig();
-        pc.setModuleName(MODULE_NAME.equals("") ? scanner("模块子包名") : MODULE_NAME);
+        pc.setModuleName(moduleName);
         pc.setParent(MODULE_ROOT_PACKAGE_NAME);
         mpg.setPackageInfo(pc);
 
@@ -185,7 +211,7 @@ public class CodeGenerator {
         //strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
         //strategy.setSuperEntityColumns("id");
-        String tableNames = scanner("表名，多个英文逗号分割");
+        String tableNames = scanner("请输入表名，多个英文逗号分割:", true);
         if (!tableNames.trim().equals("")) {
             strategy.setInclude(tableNames.split(","));
         }
@@ -195,6 +221,8 @@ public class CodeGenerator {
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
+
+        System.out.println("生成成功！");
     }
 
 }
