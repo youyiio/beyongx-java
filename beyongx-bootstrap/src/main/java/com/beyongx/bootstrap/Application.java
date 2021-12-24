@@ -11,7 +11,7 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
 
 @SpringBootApplication(scanBasePackages = {"com.beyongx"}, exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
 // @MapperScan已经使用了DataSourceConfig设置
-// @MapperScan(basePackages={"com.beyongx.framework.mapper", "cn.airsafety.sms.mapper"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
+// @MapperScan(basePackages={"com.beyongx.framework.mapper", "com.beyongx.*.mapper"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 @ComponentScan(basePackages={"com.beyongx"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 @EnableCaching
 public class Application {

@@ -12,6 +12,7 @@ import com.beyongx.common.validation.constraints.Mobile;
 import com.beyongx.common.validation.group.Create;
 import com.beyongx.common.validation.group.Edit;
 import com.beyongx.system.entity.SysDept;
+import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysRole;
 
 import lombok.Data;
@@ -79,4 +80,9 @@ public class UserVo {
     private SysDept dept;
 
     private List<SysRole> roles;
+
+
+    private List<Integer> jobIds;
+
+    private List<SysJob> jobs;
 }

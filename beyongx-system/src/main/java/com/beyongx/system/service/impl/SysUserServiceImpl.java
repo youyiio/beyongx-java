@@ -8,10 +8,13 @@ import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
+import com.beyongx.system.entity.SysUserJob;
 import com.beyongx.system.entity.SysUserRole;
 import com.beyongx.system.entity.meta.UserMeta;
+import com.beyongx.system.mapper.SysUserJobMapper;
 import com.beyongx.system.mapper.SysUserMapper;
 import com.beyongx.system.mapper.SysUserRoleMapper;
+import com.beyongx.system.service.ISysUserJobService;
 import com.beyongx.system.service.ISysUserRoleService;
 import com.beyongx.system.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -43,6 +46,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private ISysUserRoleService userRoleService;
     @Autowired
     private SysUserRoleMapper userRoleMapper;
+    @Autowired
+    private ISysUserJobService userJobService;
+    @Autowired
+    private SysUserJobMapper userJobMapper;
 
     @Override
     public SysUser register(SignUser signUser, String ip) {
@@ -259,13 +266,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (StringUtils.isNotBlank(userVo.getWeixin())) {
             user.setWeixin(userVo.getWeixin());
         }
+        if (userVo.getDeptId() != null) {
+            user.setDeptId(userVo.getDeptId());
+        }
 
         baseMapper.updateById(user);
 
         return user;
     }
 
-    //给用户分配
+    //给用户分配角色
     @Override
     public List<SysRole> assignRoles(Integer uid, List<Integer> roleIds) {
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
@@ -284,6 +294,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         userRoleService.saveBatch(userRolelist);
 
         return this.listRoles(uid);
+    }
+
+    //给用户分配岗位
+    @Override
+    public List<SysJob> assignJobs(Integer uid, List<Integer> jobIds) {
+        QueryWrapper<SysUserJob> wrapper = new QueryWrapper<>();
+        wrapper.eq("uid", uid);
+        userJobMapper.delete(wrapper);
+
+        List<SysUserJob> userJoblist = jobIds.stream().map(jobId -> {
+            SysUserJob userJob = new SysUserJob();
+            userJob.setJobId(jobId);
+            userJob.setUid(uid);
+
+            //userJobMapper.insert(userJob);
+            return userJob;
+        }).collect(Collectors.toList());
+        
+        userJobService.saveBatch(userJoblist);
+
+        return this.listJobs(uid);
     }
 
     @Override

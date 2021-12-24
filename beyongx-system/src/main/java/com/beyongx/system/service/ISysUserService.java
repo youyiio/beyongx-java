@@ -42,6 +42,9 @@ public interface ISysUserService extends IService<SysUser> {
     //分配角色
     List<SysRole> assignRoles(Integer uid, List<Integer> roleIds);
 
+    //分配岗位
+    List<SysJob> assignJobs(Integer uid, List<Integer> jobIds);
+
     boolean modifyPassword(Integer uid, String plainPassword);
 
     boolean freeze(Integer uid);

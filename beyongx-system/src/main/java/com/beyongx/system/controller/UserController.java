@@ -19,6 +19,7 @@ import com.beyongx.common.validation.group.Edit;
 import com.beyongx.common.vo.Result;
 import com.beyongx.framework.vo.PageVo;
 import com.beyongx.system.entity.SysDept;
+import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.meta.UserMeta;
@@ -215,6 +216,15 @@ public class UserController {
 
         newUserVo.setRoles(roles);
 
+        //设置岗位
+        List<SysJob> jobs = null;
+        if (CollectionUtils.isNotEmpty(userVo.getJobIds())) {
+            jobs = userService.assignJobs(user.getId(), userVo.getJobIds());
+        } else {
+            jobs = userService.listJobs(user.getId());
+        }
+        newUserVo.setJobs(jobs);
+        
         return Result.success(newUserVo);
     }
 
