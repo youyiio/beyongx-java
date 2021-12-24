@@ -1,4 +1,4 @@
 beyongx-java 说明文档
 
 *. 使用apache lisence
-*. sql/install.sql 数据库初始化文档
+*. sql/install.sql 数据库初始化脚本
