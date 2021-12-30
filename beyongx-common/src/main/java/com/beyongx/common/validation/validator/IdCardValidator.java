@@ -13,7 +13,7 @@ public class IdCardValidator implements ConstraintValidator<IdCard, Object> {
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-        return IdCardValidatorUtils.isValidate18Idcard(o.toString());
+        return o != null && IdCardValidatorUtils.isValidate18Idcard(o.toString());
     }
 }
 
