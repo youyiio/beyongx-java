@@ -7,7 +7,7 @@
     </select>
 
     <select id="selectJobsById" resultType="com.beyongx.system.entity.SysJob">
-        select j.* from sys_job as j, sys_user_job as uj where j.id = uj.job_id and ur.uid = #{id}
+        select j.* from sys_job as j, sys_user_job as uj where j.id = uj.job_id and uj.uid = #{id}
     </select>
     
 </mapper>
