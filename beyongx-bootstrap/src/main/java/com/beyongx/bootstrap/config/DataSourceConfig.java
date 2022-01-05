@@ -49,7 +49,7 @@ public class DataSourceConfig {
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/**/*.xml"));
 
         // 指明实体扫描(多个package用逗号或者分号分隔)
-        bean.setTypeAliasesPackage("com.beyongx");
+        bean.setTypeAliasesPackage("com.beyongx.framework,com.beyongx.system");
         // 导入mybatis配置
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setJdbcTypeForNull(JdbcType.NULL);
