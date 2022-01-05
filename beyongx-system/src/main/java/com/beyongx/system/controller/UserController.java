@@ -31,6 +31,7 @@ import com.beyongx.system.vo.UserVo.ModifyPassword;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -310,5 +311,60 @@ public class UserController {
         newUserVo.setRoles(roles);
 
         return Result.success(newUserVo);
+    }
+
+    @RequiresPermissions("user:quickSelect")
+    @RequestMapping(value="/quickSelect", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result quickSelect(@Validated @RequestBody PageVo pageVo) {
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        //排除content字段
+        queryWrapper.select("id", "account", "nickname", "sex", "mobile", "email");
+
+        //过滤条件
+        Map<String, Object> filters = new HashMap<>();
+        filters.putAll(pageVo.getFilters());
+        
+        Integer id = (Integer)filters.remove("id");
+        if (id != null) {
+            queryWrapper.eq("id", id);
+        }
+
+        String nickname = (String)filters.remove("nickname");
+        if (StringUtils.isNotBlank(nickname)) {
+            queryWrapper.like("nickname", "%" + nickname + "%");
+        }
+
+        String account = (String)filters.remove("account");
+        if (StringUtils.isNotBlank(account)) {
+            queryWrapper.like("account", "%" + account + "%");
+        }
+
+        String mobile = (String)filters.remove("mobile");
+        if (StringUtils.isNotBlank(mobile)) {
+            queryWrapper.like("mobile", "%" + mobile + "%");
+        }
+
+        String email = (String)filters.remove("email");
+        if (StringUtils.isNotBlank(email)) {
+            queryWrapper.like("nickname", "%" + email + "%");
+        }
+
+        //排序
+        Map<String, String> orders = pageVo.getOrders();
+        if (orders.size() == 0) {
+            queryWrapper.orderByDesc("id");
+        } else {
+            for (String key : orders.keySet()) {
+                String val = orders.get(key);
+                Boolean isAsc = val.equalsIgnoreCase("asc");
+                queryWrapper.orderBy(true, isAsc, key);
+            }            
+        }
+
+        IPage<Map<String, Object>> page = new Page<>(pageVo.getPage(), pageVo.getSize());
+        
+        IPage<Map<String, Object>> pageList = userService.pageMaps(page, queryWrapper);
+
+        return Result.success(pageList);
     }
 }
