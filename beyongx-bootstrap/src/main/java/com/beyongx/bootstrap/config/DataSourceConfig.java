@@ -26,7 +26,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = {"com.beyongx.framework.mapper", "com.beyongx.*.mapper"}, sqlSessionFactoryRef = "beyongxSqlSessionFactory", nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
+@MapperScan(basePackages = {"com.beyongx.**.mapper"}, sqlSessionFactoryRef = "beyongxSqlSessionFactory", nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 public class DataSourceConfig {
     // 将这个对象放入Spring容器中
     @Bean(name = "beyongxDataSource")
@@ -46,7 +46,7 @@ public class DataSourceConfig {
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean(); //使用了mybatis-plus，非常重要！！！
         bean.setDataSource(datasource);
         // 设置mybatis的xml所在位置
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/**/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/**/*.xml"));
 
         // 指明实体扫描(多个package用逗号或者分号分隔)
         bean.setTypeAliasesPackage("com.beyongx.framework,com.beyongx.system");
