@@ -10,8 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGenerator;
 
 @SpringBootApplication(scanBasePackages = {"com.beyongx"}, exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
-// @MapperScan已经使用了DataSourceConfig设置
-// @MapperScan(basePackages={"com.beyongx.framework.mapper", "com.beyongx.*.mapper"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
+// @MapperScan 前往beyongx-bootstrap模块下config/DataSourceConfig.java文件进行配置修改
 @ComponentScan(basePackages={"com.beyongx"}, nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 @EnableCaching
 public class Application {
