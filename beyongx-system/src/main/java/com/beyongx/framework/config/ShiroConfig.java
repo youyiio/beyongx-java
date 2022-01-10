@@ -61,7 +61,7 @@ public class ShiroConfig {
         //拦截所有接口请求，做权限判断
         //启用认证
         String openAuth = auth ? "jwt" : "anon";
-        filterMap.put("/**", "anon");
+        //filterMap.put("/**", "anon");
         filterMap.put("/api/**", openAuth);
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
