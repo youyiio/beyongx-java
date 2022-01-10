@@ -94,6 +94,7 @@ spring:
 #mybatis plus 设置
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.beyongx.framework,com.beyongx.system
   global-config:
     # 关闭MP3.0自带的banner
     banner: false

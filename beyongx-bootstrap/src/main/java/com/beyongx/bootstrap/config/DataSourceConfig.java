@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGenerator;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -28,6 +29,16 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = {"com.beyongx.**.mapper"}, sqlSessionFactoryRef = "beyongxSqlSessionFactory", nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class)
 public class DataSourceConfig {
+
+    @Value("${mybatis-plus.mapper-locations}")
+    private String mapperLocations;
+    @Value("${mybatis-plus.type-aliases-package")
+    private String typeAliasesPackage;
+    @Value("${mybatis-plus.map-underscore-to-camel-case")
+    private Boolean mapUnderscoreToCamelCase;
+    @Value("${mybatis-plus.call-setters-on-nulls")
+    private Boolean callSettersOnNulls;
+
     // 将这个对象放入Spring容器中
     @Bean(name = "beyongxDataSource")
     // 读取application.properties中的配置参数映射成为一个对象
@@ -46,18 +57,19 @@ public class DataSourceConfig {
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean(); //使用了mybatis-plus，非常重要！！！
         bean.setDataSource(datasource);
         // 设置mybatis的xml所在位置
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/**/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
 
         // 指明实体扫描(多个package用逗号或者分号分隔)
-        bean.setTypeAliasesPackage("com.beyongx.framework,com.beyongx.system");
+        bean.setTypeAliasesPackage(typeAliasesPackage);
         // 导入mybatis配置
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setJdbcTypeForNull(JdbcType.NULL);
-        configuration.setMapUnderscoreToCamelCase(true);
-        configuration.setCallSettersOnNulls(true);
+        configuration.setMapUnderscoreToCamelCase(mapUnderscoreToCamelCase);
+        configuration.setCallSettersOnNulls(callSettersOnNulls);
         configuration.setCacheEnabled(false);
         // 配置打印sql语句
         configuration.setLogImpl(StdOutImpl.class);
+        configuration.setObjectWrapperFactory(new com.baomidou.mybatisplus.extension.MybatisMapWrapperFactory());
         bean.setConfiguration(configuration);
         // 添加分页功能
         bean.setPlugins(new Interceptor[]{mybatisPlusInterceptor()});
