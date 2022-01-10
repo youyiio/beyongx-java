@@ -32,11 +32,11 @@ public class DataSourceConfig {
 
     @Value("${mybatis-plus.mapper-locations}")
     private String mapperLocations;
-    @Value("${mybatis-plus.type-aliases-package")
+    @Value("${mybatis-plus.type-aliases-package}")
     private String typeAliasesPackage;
-    @Value("${mybatis-plus.map-underscore-to-camel-case")
+    @Value("${mybatis-plus.configuration.map-underscore-to-camel-case}")
     private Boolean mapUnderscoreToCamelCase;
-    @Value("${mybatis-plus.call-setters-on-nulls")
+    @Value("${mybatis-plus.configuration.call-setters-on-nulls}")
     private Boolean callSettersOnNulls;
 
     // 将这个对象放入Spring容器中
