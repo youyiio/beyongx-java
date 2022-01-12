@@ -4,6 +4,7 @@ package com.beyongx.system.controller;
 import com.beyongx.common.utils.TreeUtils;
 import com.beyongx.common.vo.Result;
 import com.beyongx.system.entity.SysDept;
+import com.beyongx.system.entity.SysJob;
 import com.beyongx.system.entity.SysMenu;
 import com.beyongx.system.entity.SysRole;
 import com.beyongx.system.entity.SysUser;
@@ -76,6 +77,9 @@ public class UcenterController {
 
         List<SysRole> roleList = userService.listRoles(user.getId());        
         data.put("roles", roleList);
+
+        List<SysJob> jobList = userService.listJobs(user.getId());
+        data.put("jobs", jobList);
 
         return Result.success(data);
     }

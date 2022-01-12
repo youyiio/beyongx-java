@@ -127,6 +127,9 @@ public class UserController {
             List<SysRole> roles = userService.listRoles(userVo.getId());
             userVo.setRoles(roles);
 
+            List<SysJob> jobs = userService.listJobs(userVo.getId());
+            userVo.setJobs(jobs);
+
             list.add(userVo);
         }
         pageUserVoList.setRecords(list);
@@ -157,6 +160,9 @@ public class UserController {
 
         List<SysRole> roles = userService.listRoles(userVo.getId());
         userVo.setRoles(roles);
+
+        List<SysJob> jobs = userService.listJobs(userVo.getId());
+        userVo.setJobs(jobs);
 
         return Result.success(userVo);
     }
