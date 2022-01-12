@@ -17,6 +17,7 @@
         <module>beyongx-bootstrap</module>
         <module>beyongx-system</module>
         <module>beyongx-common</module>
+		<module>beyongx-frontend</module>
 		<!-- 项目扩展模块（特定项目功能）
 		<module>beyongx-featuremodule</module>
 		-->

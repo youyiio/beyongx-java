@@ -57,7 +57,7 @@ spring:
     expose-session-attributes: true
     request-context-attribute: request
     # 设置模板后缀名
-    suffix: .ftl
+    suffix: .html
     # 设置文档类型
     content-type: text/html
     # 设置页面编码格式

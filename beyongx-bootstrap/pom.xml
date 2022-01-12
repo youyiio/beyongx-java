@@ -29,6 +29,12 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.beyongx</groupId>
+            <artifactId>beyongx-frontend</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- 新增模块时，主模块（启动模块）需要添加依赖，componentScan才能扫描到" -->
     </dependencies>
 
