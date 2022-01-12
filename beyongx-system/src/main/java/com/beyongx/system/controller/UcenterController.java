@@ -62,7 +62,7 @@ public class UcenterController {
         SysUser user = userService.getById(jwtUser.getUid());
 
         Map<String, Object> data = new HashMap<>();
-        data.put("uid", user.getId());
+        data.put("id", user.getId());
         data.put("nickname", user.getNickname());
         data.put("headUrl", user.getHeadUrl());
         data.put("description", "");
