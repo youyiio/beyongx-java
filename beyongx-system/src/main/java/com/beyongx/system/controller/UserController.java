@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -126,9 +127,13 @@ public class UserController {
 
             List<SysRole> roles = userService.listRoles(userVo.getId());
             userVo.setRoles(roles);
+            List<Integer> roleIds = roles.stream().map(role -> role.getId()).collect(Collectors.toList());
+            userVo.setRoleIds(roleIds);
 
             List<SysJob> jobs = userService.listJobs(userVo.getId());
             userVo.setJobs(jobs);
+            List<Integer> jobIds = jobs.stream().map(job -> job.getId()).collect(Collectors.toList());
+            userVo.setJobIds(jobIds);
 
             list.add(userVo);
         }
@@ -160,9 +165,13 @@ public class UserController {
 
         List<SysRole> roles = userService.listRoles(userVo.getId());
         userVo.setRoles(roles);
+        List<Integer> roleIds = roles.stream().map(role -> role.getId()).collect(Collectors.toList());
+        userVo.setRoleIds(roleIds);
 
         List<SysJob> jobs = userService.listJobs(userVo.getId());
         userVo.setJobs(jobs);
+        List<Integer> jobIds = jobs.stream().map(job -> job.getId()).collect(Collectors.toList());
+        userVo.setJobIds(jobIds);
 
         return Result.success(userVo);
     }
@@ -198,6 +207,8 @@ public class UserController {
         newUserVo.setDept(dept);
 
         newUserVo.setRoles(roles);
+        List<Integer> roleIds = roles.stream().map(role -> role.getId()).collect(Collectors.toList());
+        userVo.setRoleIds(roleIds);
 
         return Result.success(newUserVo);
     }
@@ -232,6 +243,8 @@ public class UserController {
         newUserVo.setDept(dept);
 
         newUserVo.setRoles(roles);
+        List<Integer> roleIds = roles.stream().map(role -> role.getId()).collect(Collectors.toList());
+        userVo.setRoleIds(roleIds);
 
         //设置岗位
         List<SysJob> jobs = null;
@@ -241,7 +254,9 @@ public class UserController {
             jobs = userService.listJobs(user.getId());
         }
         newUserVo.setJobs(jobs);
-        
+        List<Integer> jobIds = jobs.stream().map(job -> job.getId()).collect(Collectors.toList());
+        userVo.setJobIds(jobIds);
+
         return Result.success(newUserVo);
     }
 
