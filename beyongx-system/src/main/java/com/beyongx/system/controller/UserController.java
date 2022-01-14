@@ -178,7 +178,12 @@ public class UserController {
             return Result.error(Result.Code.E_DB_ERROR, "用户创建失败!");
         }
 
-        List<SysRole> roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+        List<SysRole> roles = null;
+        if (CollectionUtils.isNotEmpty(userVo.getRoleIds())) {
+            roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+        } else {
+            roles = userService.listRoles(userVo.getId());
+        }
 
         UserVo newUserVo = new UserVo();
         try {
@@ -207,7 +212,12 @@ public class UserController {
             return Result.error(Result.Code.E_DB_ERROR, "用户创建失败!");
         }
 
-        List<SysRole> roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+        List<SysRole> roles = null;
+        if (CollectionUtils.isNotEmpty(userVo.getRoleIds())) {
+            roles = userService.assignRoles(user.getId(), userVo.getRoleIds());
+        } else {
+            roles = userService.listRoles(userVo.getId());
+        }
 
         UserVo newUserVo = new UserVo();
         try {

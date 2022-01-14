@@ -22,6 +22,7 @@ import com.beyongx.system.vo.SignUser;
 import com.beyongx.system.vo.UserVo;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,6 +279,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     //给用户分配角色
     @Override
     public List<SysRole> assignRoles(Integer uid, List<Integer> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            throw new ServiceException(Result.Code.E_DATA_VALIDATE_ERROR, "角色ids不能为空!");
+        }
+
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", uid);
         userRoleMapper.delete(wrapper);
@@ -299,6 +304,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     //给用户分配岗位
     @Override
     public List<SysJob> assignJobs(Integer uid, List<Integer> jobIds) {
+        if (CollectionUtils.isEmpty(jobIds)) {
+            throw new ServiceException(Result.Code.E_DATA_VALIDATE_ERROR, "岗位ids不能为空!");
+        }
+
         QueryWrapper<SysUserJob> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", uid);
         userJobMapper.delete(wrapper);
