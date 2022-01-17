@@ -63,6 +63,9 @@ public class UcenterController {
 
         Map<String, Object> data = new HashMap<>();
         data.put("id", user.getId());
+        data.put("account", user.getAccount());
+        data.put("mobile", user.getMobile());
+        data.put("email", user.getEmail());
         data.put("nickname", user.getNickname());
         data.put("headUrl", user.getHeadUrl());
         data.put("description", "");
