@@ -158,6 +158,13 @@
 			<artifactId>maven-resources-plugin</artifactId>
 			<version>2.7</version>
 		</dependency>
+
+		<!-- excel 导入导出 -->
+		<dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.0.5</version>
+        </dependency>
 	</dependencies>
 
 	<build>
