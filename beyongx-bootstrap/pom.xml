@@ -17,6 +17,13 @@
     <description>Beyongx bootstrap, it's starter and generator!</description>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
+        </dependency>
+
         <dependency>
             <groupId>com.beyongx</groupId>
             <artifactId>beyongx-common</artifactId>
