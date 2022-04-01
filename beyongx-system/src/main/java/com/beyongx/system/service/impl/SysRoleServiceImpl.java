@@ -9,8 +9,6 @@ import com.beyongx.system.entity.SysUser;
 import com.beyongx.system.entity.meta.RoleMeta;
 import com.beyongx.system.mapper.SysMenuMapper;
 import com.beyongx.system.mapper.SysRoleMapper;
-import com.beyongx.system.mapper.SysRoleMenuMapper;
-import com.beyongx.system.service.ISysMenuService;
 import com.beyongx.system.service.ISysRoleMenuService;
 import com.beyongx.system.service.ISysRoleService;
 import com.beyongx.system.vo.RoleVo;
