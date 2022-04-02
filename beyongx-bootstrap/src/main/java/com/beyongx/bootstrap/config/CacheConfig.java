@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +129,8 @@ public class CacheConfig extends CachingConfigurerSupport {
         // objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         // objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
+        objectMapper.registerModule(new JavaTimeModule());
+        
         // 此项必须配置，否则会报java.lang.ClassCastException: java.util.LinkedHashMap cannot be cast to XXX
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
