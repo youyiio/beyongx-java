@@ -136,12 +136,12 @@ public class ConfigController {
         return Result.success(null);
     }
 
-
     //查询字典信息
-    @RequiresPermissions("config:query")
-    @PostMapping("/query")
-    public Result queryByKey(@RequestBody ConfigVo configVo) {
+    @RequiresPermissions("config:queryOne")
+    @PostMapping("/queryOne")
+    public Result queryOne(@RequestBody ConfigVo configVo) {
         SysConfig sysConfig = null;
+
         if (StringUtils.isBlank(configVo.getGroup())) {
             sysConfig = configService.getByKey(configVo.getKey());
         } else {
@@ -153,6 +153,31 @@ public class ConfigController {
         }
 
         return Result.success(sysConfig);
+    }
+
+    //查询字典列表
+    @RequiresPermissions("config:query")
+    @PostMapping("/query")
+    public Result query(@RequestBody ConfigVo configVo) {
+        if (StringUtils.isBlank(configVo.getGroup()) && StringUtils.isBlank(configVo.getKey())) {
+            return Result.error(Result.Code.E_PARAM_ERROR, "参数 group|key 不能同时为空!");
+        }
+
+        QueryWrapper<SysConfig> queryWrapper = new QueryWrapper<>();
+
+        if (StringUtils.isNotBlank(configVo.getGroup())) {
+            queryWrapper.eq("`group`", configVo.getGroup());
+        }
+        if (StringUtils.isNotBlank(configVo.getKey())) {
+            queryWrapper.eq("`key`", configVo.getKey());
+        }
+
+        List<SysConfig> list = configService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return Result.error(Result.Code.E_DATA_NOT_FOUND, "字典未找到!");
+        }
+
+        return Result.success(list);
     }
 
     //查询状态字典
