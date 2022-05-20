@@ -4,7 +4,7 @@ port=8080
 
 lsof -i:$port
 
-echo 'start process...'
+echo "start process at :${port}..."
 
 # 找不到java
 source /etc/profile
