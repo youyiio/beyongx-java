@@ -118,7 +118,7 @@ shiro:
     alg: HS256
     secret: xp1yutwt8Fxj5XEzes4j-X4tCBQwE0
     expired: 3600  # 秒
-    action_excludes: /api/sign/login,/api/sign/register,/api/sms/sendCode,/api/sms/login
+    action_excludes: /api/sign/login,/api/sign/logout,/api/sign/register,/api/sms/sendCode,/api/sms/login
 
 #beyongx 配置
 beyongx:
