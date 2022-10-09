@@ -120,6 +120,13 @@ shiro:
     expired: 3600  # 秒
     action_excludes: /api/sign/login,/api/sign/logout,/api/sign/register,/api/sms/sendCode,/api/sms/login
 
+#minio配置  
+minio:  
+    access-key: Q5IBlSS57nk1oLO8
+    secret-key: RDLrUtkFVUcM7gBPXHu07DrINugUR7q1
+    endpoint: http://192.168.1.52:9090
+    bucket-name: mybucket  
+
 #beyongx 配置
 beyongx:
   file:

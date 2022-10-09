@@ -169,6 +169,13 @@
             <artifactId>easyexcel</artifactId>
             <version>3.0.5</version>
         </dependency>
+
+		<!-- minio存储 -->
+        <dependency>
+			<groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.2.1</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -199,7 +206,7 @@
 		<repository>
 			<id>aliyun</id>
 			<name>aliyun Repository</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+			<url>https://maven.aliyun.com/repository/public</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -209,7 +216,7 @@
         <pluginRepository>
             <id>public</id>
             <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
